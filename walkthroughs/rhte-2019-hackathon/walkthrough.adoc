@@ -60,6 +60,7 @@ You've been given access to the customer's PostgreSQL database that was
 referenced in the abstract. Use the following details to connect:
 
 . Username: `{user-sanitized-username}`
-. Password: Obtained by running `echo "{openshift-app-host}" | md5`
+. Password: `Password1`
 . Hostname: `postgresql.city-of-pawnee.svc`
-. Database: `{user-sanitized-username}-city-info`
+. Database: `city-info`
+. Port: `5432`
