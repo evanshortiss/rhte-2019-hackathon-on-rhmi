@@ -1,0 +1,30 @@
+{
+  "name": "rhte-2019-hackathon-on-rhmi",
+  "version": "0.1.0",
+  "private": true,
+  "description": "This repository contains a Solution Pattern that's compatible with the [Integreatly Solution Explorer](https://github.com/integr8ly/tutorial-web-app).",
+  "main": "index.js",
+  "scripts": {
+    "test": "iad -W error -d ./walkthroughs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi.git"
+  },
+  "keywords": [],
+  "author": "Evan Shortiss",
+  "license": "MIT",
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test"
+    }
+  },
+  "bugs": {
+    "url": "https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi/issues"
+  },
+  "homepage": "https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi#readme",
+  "devDependencies": {
+    "husky": "~3.0.2",
+    "integreatly-asciidoc": "0.0.4"
+  }
+}

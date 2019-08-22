@@ -1,0 +1,65 @@
+= Traffic and Meters Realtime System
+
+Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon! Click the
+*Get Started* button to view the hackathon brief and to view specific
+requirements.
+
+[type=walkthroughResource,serviceName=openshift]
+.Red Hat OpenShift
+****
+* link:{openshift-host}/console[Console, window="_blank"]
+* link:https://help.openshift.com/[Openshift Online Help Center, window="_blank"]
+* link:https://blog.openshift.com/[Openshift Blog, window="_blank"]
+****
+
+[type=walkthroughResource,serviceName=apicurio]
+.Apicurito
+****
+* link:{apicurio-url}[Console, window="_blank", id="resources-apicurio-url"]
+****
+
+[type=walkthroughResource,serviceName=fuse]
+.Fuse Online
+****
+* link:{fuse-url}[Console, window="_blank", id="resources-fuse-url"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/index[Documentation, window="_blank"]
+* link:https://www.redhat.com/en/technologies/jboss-middleware/fuse-online[Overview, window="_blank"]
+****
+
+[type=walkthroughResource,serviceName=amq-online-standard]
+.AMQ Online
+****
+* link:{enmasse-url}[Console, window="_blank", , id="resources-enmasse-url"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_amq/7.4/html/using_amq_online_on_openshift_container_platform/index[Documentation, window="_blank"]
+* link:https://www.redhat.com/en/technologies/jboss-middleware/amq[Overview, window="_blank"]
+****
+
+[type=walkthroughResource,serviceName=codeready]
+.CodeReady Workspaces
+****
+* link:{che-url}[Console, window="_blank"]
+* link:https://developers.redhat.com/products/codeready-workspaces/overview/[Overview, window="_blank"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces_for_openshift/1.0.0/[Documentation, window="_blank"]
+****
+[type=walkthroughResource,serviceName=3scale]
+.3Scale
+****
+* link:https://{user-username}-admin.{openshift-app-host}[Console, window="_blank"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/2.5/[Documentation, window="_blank"]
+* link:https://www.redhat.com/en/technologies/jboss-middleware/3scale[Overview, window="_blank"]
+****
+
+[time=240]
+== Get Hacking
+
+TODO - Place abstract content here.
+
+=== PostgreSQL Details
+
+You've been given access to the customer's PostgreSQL database that was
+referenced in the abstract. Use the following details to connect:
+
+. Username: `{user-sanitized-username}`
+. Password: Obtained by running `echo "{openshift-app-host}" | md5`
+. Hostname: `postgresql.city-of-pawnee.svc`
+. Database: `{user-sanitized-username}-city-info`
