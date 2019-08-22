@@ -2,7 +2,7 @@
 
 ## Traffic Sensors
 
-Traffic sensors flush their counters every 30 seconds. Flushing a counter means
+Traffic sensors flush their counters every minute. Flushing a counter means
 they reset their internal count to 0, and send a JSON payload to an AMQ Streams
 broker. 
 

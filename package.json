@@ -25,6 +25,7 @@
   "homepage": "https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi#readme",
   "devDependencies": {
     "husky": "~3.0.2",
-    "integreatly-asciidoc": "0.0.4"
+    "integreatly-asciidoc": "0.0.4",
+    "json2csv": "~4.5.2"
   }
 }

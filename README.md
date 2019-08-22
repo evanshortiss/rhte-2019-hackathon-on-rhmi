@@ -39,7 +39,6 @@ yarn start:dev
 ## Deployment to an RHMI Cluster
 
 ### Via OpenShift UI
-
 1. Sign in as `admin` to the cluster.
 1. Open the `Solution Explorer` project.
 1. Navigate to `Resources > Other Resources` using the side menu.
@@ -53,6 +52,9 @@ WALKTHROUGH_LOCATIONS: 'https://github.com/integr8ly/tutorial-web-app-walkthroug
 ```
 
 ### Via OpenShift CLI
-
 1. Login as `admin` using `oc login -u admin`
 1. Run `oc patch webapp tutorial-web-app-operator -n webapp --type=merge -p '{"spec":{"template":{"parameters":{"WALKTHROUGH_LOCATIONS":"https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi"}}}}'`
+
+### PostgreSQL Setup
+Run the `db-setup.sh` script in the *content/* folder to setup a namespace and
+database that attendees will need to use to complete the lab.

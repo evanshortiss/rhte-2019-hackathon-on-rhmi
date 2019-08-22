@@ -1,4 +1,4 @@
-= Traffic and Meters Realtime System
+= RHTE 2019 RHMI Hackathon
 
 Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon! Click the
 *Get Started* button to view the hackathon brief and to view specific
