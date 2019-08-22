@@ -3,9 +3,7 @@
 This repository contains a Solution Pattern that's compatible with the
 [Integreatly Solution Explorer](https://github.com/integr8ly/tutorial-web-app).
 
-## Local Development
-
-### Setup
+## Development Setup
 
 Setup requires installation of Node.js 10 or later. This enables a Git hook
 that verifies the asciidoc content and walkthrough config.
@@ -18,7 +16,11 @@ cd rhte-2019-hackathon-on-rhmi
 npm install
 ```
 
-### Running the Server
+## Run Locally
+
+When running the Solution Explorer (webapp) locally you lose certain features,
+such as the injection of variables into asciidoc. Use local development to
+quickly preview changes, but for testing deploy on an actual RHMI cluster.
 
 ```bash
 # Clone the Solution Explorer
