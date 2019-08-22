@@ -7,12 +7,13 @@
 
 const { writeFileSync } = require('fs')
 const { resolve } = require('path')
+const { argv } = require('yargs')
 
 const dataset = require(
   resolve(__dirname, '../../data/samples/traffic-count-sample.raw.json')
 )
 
-const meters = dataset.features.map((f, id) => {
+const streets = dataset.features.map((f, id) => {
   return {
     id,
     street_name: f.attributes.Location,
@@ -23,5 +24,5 @@ const meters = dataset.features.map((f, id) => {
 
 writeFileSync(
   resolve(__dirname, 'sync-files/street_info.json'),
-  JSON.stringify(meters)
+  JSON.stringify(streets.slice(0, argv.limit || streets.length))
 )

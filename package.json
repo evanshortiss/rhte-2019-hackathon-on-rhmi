@@ -27,5 +27,8 @@
     "husky": "~3.0.2",
     "integreatly-asciidoc": "0.0.4",
     "json2csv": "~4.5.2"
+  },
+  "dependencies": {
+    "yargs": "~14.0.0"
   }
 }

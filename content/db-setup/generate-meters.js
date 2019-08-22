@@ -5,6 +5,7 @@
 
 const { writeFileSync } = require('fs')
 const { resolve } = require('path')
+const { argv } = require('yargs')
 
 const dataset = require(
   resolve(__dirname, '../../data/samples/parking-sample.raw.json')
@@ -18,8 +19,8 @@ const meters = dataset.features.map((m, id) => {
     longitude: m.attributes.GPSX
   }
 })
-
+console.log(argv)
 writeFileSync(
   resolve(__dirname, 'sync-files/meter_info.json'),
-  JSON.stringify(meters)
+  JSON.stringify(meters.slice(0, argv.limit || meters.length))
 )
