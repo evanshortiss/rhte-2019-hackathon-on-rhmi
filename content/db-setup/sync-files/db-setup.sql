@@ -6,7 +6,6 @@ GRANT USAGE ON SCHEMA public TO readaccess;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO readaccess;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
 REVOKE ALL ON SCHEMA public FROM public;
-GRANT ALL ON SCHEMA public TO writeuser;
 
 CREATE TABLE junction_info (
    id serial NOT NULL PRIMARY KEY,
