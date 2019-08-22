@@ -26,11 +26,11 @@ echo "\nWaiting 90 seconds for PostgreSQL to start"
 sleep 60
 
 # Generate data in JSON format, then convert to CSV and delete JSON
-echo "Generating street_info and meter_info CSV from JSON"
+echo "Generating junction_info and meter_info CSV from JSON"
 node generate-meters.js
 node generate-streets.js
 npx json2csv -i sync-files/meter_info.json -o sync-files/meter_info.csv
-npx json2csv -i sync-files/street_info.json -o sync-files/street_info.csv
+npx json2csv -i sync-files/junction_info.json -o sync-files/junction_info.csv
 rm sync-files/*.json
 
 # Get the postgres pod ID

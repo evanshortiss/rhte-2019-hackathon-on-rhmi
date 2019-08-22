@@ -1,0 +1,302 @@
+[
+  {
+    "id": 0,
+    "junction_name": "DE SOTO AV  AT  OXNARD  ST",
+    "latitude": 34.1792562578955,
+    "longitude": -118.59047873659077
+  },
+  {
+    "id": 1,
+    "junction_name": "CANOGA AV AT VANOWEN ST",
+    "latitude": 34.18834537329447,
+    "longitude": -118.59747110546994
+  },
+  {
+    "id": 2,
+    "junction_name": "LANFRANCO  ST  AT  LORENA  ST",
+    "latitude": 34.03165357906271,
+    "longitude": -118.19850889824447
+  },
+  {
+    "id": 3,
+    "junction_name": "CRENSHAW BL AT 36th ST",
+    "latitude": 34.025586946373316,
+    "longitude": -118.33511116856756
+  },
+  {
+    "id": 4,
+    "junction_name": "SLAUSON  AV  AT  NORMANDIE  AV",
+    "latitude": 33.98911205158549,
+    "longitude": -118.2980275015024
+  },
+  {
+    "id": 5,
+    "junction_name": "ANAHEIM ST AT FRIES  AV",
+    "latitude": 33.77990869314322,
+    "longitude": -118.2637400522642
+  },
+  {
+    "id": 6,
+    "junction_name": "FULTON  AV  AT  OXNARD  ST",
+    "latitude": 34.179406259563635,
+    "longitude": -118.42252708627817
+  },
+  {
+    "id": 7,
+    "junction_name": "FOUNTAIN  AV  AT  VIRGIL  AV",
+    "latitude": 34.095739886798974,
+    "longitude": -118.28673434818447
+  },
+  {
+    "id": 8,
+    "junction_name": "WOODLAKE  AV   AT   BURBANK  BL",
+    "latitude": 34.171909967226455,
+    "longitude": -118.63205852433649
+  },
+  {
+    "id": 9,
+    "junction_name": "MOORPARK ST AT  CAHUENGA BL",
+    "latitude": 34.150382474649966,
+    "longitude": -118.36148475510643
+  },
+  {
+    "id": 10,
+    "junction_name": "MOORPARK ST  AT  LANKERSHIM BL",
+    "latitude": 34.15037912187503,
+    "longitude": -118.36364539503406
+  },
+  {
+    "id": 11,
+    "junction_name": "SEPULVEDA  BL  AT  IMPERIAL  HWY",
+    "latitude": 33.9310742647768,
+    "longitude": -118.39616874745379
+  },
+  {
+    "id": 12,
+    "junction_name": "FLORENCE AV AT VERMONT AV",
+    "latitude": 33.974634247860855,
+    "longitude": -118.28925598117634
+  },
+  {
+    "id": 13,
+    "junction_name": "CULVER  BL  AT  INGLEWOOD  BL",
+    "latitude": 33.99622336000842,
+    "longitude": -118.41665414255026
+  },
+  {
+    "id": 14,
+    "junction_name": "HESBY  ST  AT  MORELLA  AV",
+    "latitude": 34.162163764628765,
+    "longitude": -118.38998839664778
+  },
+  {
+    "id": 15,
+    "junction_name": "EAGLE ROCK BL AT RIDGEVIEW AV",
+    "latitude": 34.13030088077554,
+    "longitude": -118.21663942448124
+  },
+  {
+    "id": 16,
+    "junction_name": "FOUNTAIN AV AT SYCAMORE AV",
+    "latitude": 34.09433385536585,
+    "longitude": -118.34283017009425
+  },
+  {
+    "id": 17,
+    "junction_name": "5th ST AT VAN NESS AV",
+    "latitude": 34.06533020358195,
+    "longitude": -118.31407444778637
+  },
+  {
+    "id": 18,
+    "junction_name": "103RD  ST  AT  GRANDEE  AV",
+    "latitude": 33.94322795698209,
+    "longitude": -118.24349900944235
+  },
+  {
+    "id": 19,
+    "junction_name": "103RD  ST  AT  SAN  PEDRO  ST",
+    "latitude": 33.94285570399303,
+    "longitude": -118.2695284931101
+  },
+  {
+    "id": 20,
+    "junction_name": "SHERMAN WAY  AT  WOODMAN  AV",
+    "latitude": 34.20119536229165,
+    "longitude": -118.42804235431039
+  },
+  {
+    "id": 21,
+    "junction_name": "WOODMAN AV S/O SHERMAN WAY",
+    "latitude": 34.19935257984543,
+    "longitude": -118.43126911147172
+  },
+  {
+    "id": 22,
+    "junction_name": "SATSUMA  AV  AT  KITTRIDGE  ST",
+    "latitude": 34.19032257491863,
+    "longitude": -118.3670632117996
+  },
+  {
+    "id": 23,
+    "junction_name": "VANOWEN ST AT TUJUNGA AV",
+    "latitude": 34.1939427256389,
+    "longitude": -118.37905824082644
+  },
+  {
+    "id": 24,
+    "junction_name": "LANARK ST AT LEDGE AV",
+    "latitude": 34.217295850014814,
+    "longitude": -118.35756504936298
+  },
+  {
+    "id": 25,
+    "junction_name": "LAURELVALE  DR  AT  CANTON  DR",
+    "latitude": 34.1329884049303,
+    "longitude": -118.38647774079116
+  },
+  {
+    "id": 26,
+    "junction_name": "LINDO ST AT LA FALDA PL",
+    "latitude": 34.130271502852445,
+    "longitude": -118.34139800179884
+  },
+  {
+    "id": 27,
+    "junction_name": "LONG BEACH  AV  AT  20TH  ST",
+    "latitude": 34.01879626691764,
+    "longitude": -118.24319810227216
+  },
+  {
+    "id": 28,
+    "junction_name": "NORMANDIE  AV  AT  OLYMPIC  BL",
+    "latitude": 34.05325805450543,
+    "longitude": -118.3002721671008
+  },
+  {
+    "id": 29,
+    "junction_name": "OLYMPIC  BL  AT  NORMANDIE  AV",
+    "latitude": 34.05262882527261,
+    "longitude": -118.30002804562514
+  },
+  {
+    "id": 30,
+    "junction_name": "CREWE ST W/O BABCOCK AV",
+    "latitude": 34.196724316209384,
+    "longitude": -118.40734764871263
+  },
+  {
+    "id": 31,
+    "junction_name": "SHERMAN WAY AT TUJUNGA AVE",
+    "latitude": 34.20120238975396,
+    "longitude": -118.37905766097474
+  },
+  {
+    "id": 32,
+    "junction_name": "RADFORD AV AT HART ST",
+    "latitude": 34.197570974562005,
+    "longitude": -118.39215881221311
+  },
+  {
+    "id": 33,
+    "junction_name": "WOODMAN  AV  AT  ROSCOE  BL",
+    "latitude": 34.219620632883306,
+    "longitude": -118.43193372420667
+  },
+  {
+    "id": 34,
+    "junction_name": "FRIAR ST AT NOBLE AV",
+    "latitude": 34.185671192191144,
+    "longitude": -118.45745898672347
+  },
+  {
+    "id": 35,
+    "junction_name": "WOODBRIDGE ST AT LEDGE AV",
+    "latitude": 34.14854279452992,
+    "longitude": -118.35498887393393
+  },
+  {
+    "id": 36,
+    "junction_name": "HART  ST  AT  CANTALOUPE  AV",
+    "latitude": 34.19756568796909,
+    "longitude": -118.43449972703034
+  },
+  {
+    "id": 37,
+    "junction_name": "CAMROSE  DR  AT  HIGHLAND  AV",
+    "latitude": 34.10823764128012,
+    "longitude": -118.33708363572511
+  },
+  {
+    "id": 38,
+    "junction_name": "RIMPAU  BL  AT  21ST  ST",
+    "latitude": 34.0385296000187,
+    "longitude": -118.34391409488045
+  },
+  {
+    "id": 39,
+    "junction_name": "CANOGA  AV  AT  OXNARD  ST",
+    "latitude": 34.179247716695116,
+    "longitude": -118.59737312427006
+  },
+  {
+    "id": 40,
+    "junction_name": "23rd ST W/O FIGUEROA WAY",
+    "latitude": 34.03076651977306,
+    "longitude": -118.27435157332867
+  },
+  {
+    "id": 41,
+    "junction_name": "54TH  ST  AT  FIGUEROA  ST",
+    "latitude": 33.993294077638616,
+    "longitude": -118.28268289404244
+  },
+  {
+    "id": 42,
+    "junction_name": "UNION  AV  AT  OLYMPIC  BL",
+    "latitude": 34.050839115434876,
+    "longitude": -118.2731573618748
+  },
+  {
+    "id": 43,
+    "junction_name": "EDGEWOOD  PL  AT  HUDSON  AV",
+    "latitude": 34.05498957474685,
+    "longitude": -118.33578090923064
+  },
+  {
+    "id": 44,
+    "junction_name": "VERNON  AV  AT  FIGUEROA  ST",
+    "latitude": 34.00376190946989,
+    "longitude": -118.2827146339211
+  },
+  {
+    "id": 45,
+    "junction_name": "CARDIFF  AV  AT  ALCOTT  ST",
+    "latitude": 34.05526074713457,
+    "longitude": -118.39210280788565
+  },
+  {
+    "id": 46,
+    "junction_name": "GRANDE VISTA AV S/O PICO BL",
+    "latitude": 34.01798060272942,
+    "longitude": -118.21000758483584
+  },
+  {
+    "id": 47,
+    "junction_name": "2ND  ST  E/O  LOS  ANGELES  ST",
+    "latitude": 34.050277929938275,
+    "longitude": -118.2433518557467
+  },
+  {
+    "id": 48,
+    "junction_name": "BEAUDRY  AV  AT  4TH  ST",
+    "latitude": 34.055615969794644,
+    "longitude": -118.25745962421665
+  },
+  {
+    "id": 49,
+    "junction_name": "OLYMPIC  BL  AT  NORMANDIE  AV",
+    "latitude": 34.05263409641216,
+    "longitude": -118.29894659499875
+  }
+]

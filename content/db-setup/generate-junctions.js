@@ -16,13 +16,13 @@ const dataset = require(
 const streets = dataset.features.map((f, id) => {
   return {
     id,
-    street_name: f.attributes.Location,
+    junction_name: f.attributes.Location,
     latitude: f.geometry.paths[0][0][1],
     longitude: f.geometry.paths[0][0][0]
   }
 })
 
 writeFileSync(
-  resolve(__dirname, 'sync-files/street_info.json'),
+  resolve(__dirname, 'sync-files/junction_info.json'),
   JSON.stringify(streets.slice(0, argv.limit || streets.length))
 )

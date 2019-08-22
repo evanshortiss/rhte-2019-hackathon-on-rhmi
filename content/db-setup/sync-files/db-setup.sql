@@ -8,9 +8,9 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readaccess;
 REVOKE ALL ON SCHEMA public FROM public;
 GRANT ALL ON SCHEMA public TO writeuser;
 
-CREATE TABLE street_info (
+CREATE TABLE junction_info (
    id serial NOT NULL PRIMARY KEY,
-   street_name text NOT NULL,
+   junction_name text NOT NULL,
    latitude real NOT NULL,
    longitude real NOT NULL
 );
@@ -22,5 +22,5 @@ CREATE TABLE meter_info (
    longitude real NOT NULL
 );
 
-COPY street_info(id,street_name,latitude,longitude) FROM '/var/lib/pgsql/data/setup-files/street_info.csv' DELIMITER ',' CSV HEADER;
+COPY junction_info(id,junction_name,latitude,longitude) FROM '/var/lib/pgsql/data/setup-files/junction_info.csv' DELIMITER ',' CSV HEADER;
 COPY meter_info(id,address,latitude,longitude) FROM '/var/lib/pgsql/data/setup-files/meter_info.csv' DELIMITER ',' CSV HEADER;

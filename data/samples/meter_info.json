@@ -1,0 +1,302 @@
+[
+  {
+    "id": 0,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.0954,
+    "longitude": -118.344218
+  },
+  {
+    "id": 1,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095452,
+    "longitude": -118.344219
+  },
+  {
+    "id": 2,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095041,
+    "longitude": -118.344216
+  },
+  {
+    "id": 3,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095795,
+    "longitude": -118.34422
+  },
+  {
+    "id": 4,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095847,
+    "longitude": -118.344221
+  },
+  {
+    "id": 5,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095982,
+    "longitude": -118.344223
+  },
+  {
+    "id": 6,
+    "address": "1301 N LA BREA AVE",
+    "latitude": 34.095644,
+    "longitude": -118.34422
+  },
+  {
+    "id": 7,
+    "address": "7000 W DE LONGPRE AVE",
+    "latitude": 34.096104,
+    "longitude": -118.343822
+  },
+  {
+    "id": 8,
+    "address": "7000 W DE LONGPRE AVE",
+    "latitude": 34.096105,
+    "longitude": -118.343668
+  },
+  {
+    "id": 9,
+    "address": "7000 W DE LONGPRE AVE",
+    "latitude": 34.096104,
+    "longitude": -118.343759
+  },
+  {
+    "id": 10,
+    "address": "1500 N GOWER ST",
+    "latitude": 34.098576,
+    "longitude": -118.322231
+  },
+  {
+    "id": 11,
+    "address": "1500 N GOWER ST",
+    "latitude": 34.098655,
+    "longitude": -118.32223
+  },
+  {
+    "id": 12,
+    "address": "1500 N GOWER ST",
+    "latitude": 34.098712,
+    "longitude": -118.322232
+  },
+  {
+    "id": 13,
+    "address": "1500 N GOWER ST",
+    "latitude": 34.098257,
+    "longitude": -118.322228
+  },
+  {
+    "id": 14,
+    "address": "6201 W SUNSET BLVD",
+    "latitude": 34.098118,
+    "longitude": -118.32565
+  },
+  {
+    "id": 15,
+    "address": "6201 W SUNSET BLVD",
+    "latitude": 34.098119,
+    "longitude": -118.32549
+  },
+  {
+    "id": 16,
+    "address": "6201 W SUNSET BLVD",
+    "latitude": 34.098118,
+    "longitude": -118.325745
+  },
+  {
+    "id": 17,
+    "address": "6201 W SUNSET BLVD",
+    "latitude": 34.09812,
+    "longitude": -118.325424
+  },
+  {
+    "id": 18,
+    "address": "6201 W SUNSET BLVD",
+    "latitude": 34.098118,
+    "longitude": -118.325807
+  },
+  {
+    "id": 19,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098756,
+    "longitude": -118.325058
+  },
+  {
+    "id": 20,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098682,
+    "longitude": -118.325056
+  },
+  {
+    "id": 21,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098357,
+    "longitude": -118.325056
+  },
+  {
+    "id": 22,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098409,
+    "longitude": -118.325058
+  },
+  {
+    "id": 23,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098626,
+    "longitude": -118.325056
+  },
+  {
+    "id": 24,
+    "address": "1500 N ARGYLE AVE",
+    "latitude": 34.098811,
+    "longitude": -118.325057
+  },
+  {
+    "id": 25,
+    "address": "6201 W LELAND WAY",
+    "latitude": 34.097103,
+    "longitude": -118.32585
+  },
+  {
+    "id": 26,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097336,
+    "longitude": -118.328892
+  },
+  {
+    "id": 27,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.096407,
+    "longitude": -118.328886
+  },
+  {
+    "id": 28,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.096773,
+    "longitude": -118.32889
+  },
+  {
+    "id": 29,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097509,
+    "longitude": -118.328892
+  },
+  {
+    "id": 30,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.09653,
+    "longitude": -118.328887
+  },
+  {
+    "id": 31,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097641,
+    "longitude": -118.328893
+  },
+  {
+    "id": 32,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097447,
+    "longitude": -118.328891
+  },
+  {
+    "id": 33,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.096907,
+    "longitude": -118.328889
+  },
+  {
+    "id": 34,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097716,
+    "longitude": -118.328893
+  },
+  {
+    "id": 35,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.096857,
+    "longitude": -118.32889
+  },
+  {
+    "id": 36,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097586,
+    "longitude": -118.328892
+  },
+  {
+    "id": 37,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097388,
+    "longitude": -118.328892
+  },
+  {
+    "id": 38,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.09658,
+    "longitude": -118.328887
+  },
+  {
+    "id": 39,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.096457,
+    "longitude": -118.328886
+  },
+  {
+    "id": 40,
+    "address": "1401 N IVAR AVE",
+    "latitude": 34.097769,
+    "longitude": -118.328893
+  },
+  {
+    "id": 41,
+    "address": "6500 W SUNSET BLVD",
+    "latitude": 34.097887,
+    "longitude": -118.33269
+  },
+  {
+    "id": 42,
+    "address": "6500 W SUNSET BLVD",
+    "latitude": 34.097886,
+    "longitude": -118.332845
+  },
+  {
+    "id": 43,
+    "address": "6500 W SUNSET BLVD",
+    "latitude": 34.097886,
+    "longitude": -118.332944
+  },
+  {
+    "id": 44,
+    "address": "6500 W SUNSET BLVD",
+    "latitude": 34.097887,
+    "longitude": -118.332779
+  },
+  {
+    "id": 45,
+    "address": "6500 W SUNSET BLVD",
+    "latitude": 34.097887,
+    "longitude": -118.333006
+  },
+  {
+    "id": 46,
+    "address": "1500 N SCHRADER BLVD",
+    "latitude": 34.098853,
+    "longitude": -118.332396
+  },
+  {
+    "id": 47,
+    "address": "1500 N SCHRADER BLVD",
+    "latitude": 34.099186,
+    "longitude": -118.332398
+  },
+  {
+    "id": 48,
+    "address": "1500 N SCHRADER BLVD",
+    "latitude": 34.099048,
+    "longitude": -118.332399
+  },
+  {
+    "id": 49,
+    "address": "1500 N SCHRADER BLVD",
+    "latitude": 34.099106,
+    "longitude": -118.332399
+  }
+]
