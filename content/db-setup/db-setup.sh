@@ -23,12 +23,12 @@ oc new-app postgresql-persistent \
 --param=POSTGRESQL_PASSWORD=changethistosomethingelse
 
 echo "\nWaiting 90 seconds for PostgreSQL to start"
-sleep 60
+sleep 90
 
 # Generate data in JSON format, then convert to CSV and delete JSON
 echo "Generating junction_info and meter_info CSV from JSON"
 node generate-meters.js
-node generate-streets.js
+node generate-junctions.js
 npx json2csv -i sync-files/meter_info.json -o sync-files/meter_info.csv
 npx json2csv -i sync-files/junction_info.json -o sync-files/junction_info.csv
 rm sync-files/*.json
