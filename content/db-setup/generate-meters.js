@@ -7,20 +7,19 @@ const { writeFileSync } = require('fs')
 const { resolve } = require('path')
 
 const dataset = require(
-  resolve(__dirname, '../../../data/samples/parking-sample.raw.json')
+  resolve(__dirname, '../../data/samples/parking-sample.raw.json')
 )
 
 const meters = dataset.features.map((m, id) => {
   return {
     id,
     address: m.attributes.ADDRESS_SPACE,
-    status: m.attributes.SENSOR_STATUS,
-    location: { x: m.attributes.GPSX, y: m.attributes.GPSY },
-    sensorId: m.attributes.SENSOR_UNIQUE_ID
+    latitude: m.attributes.GPSY,
+    longitude: m.attributes.GPSX
   }
 })
 
 writeFileSync(
-  resolve(__dirname, '../parking-meters.json'),
-  JSON.stringify(meters, null, 2)
+  resolve(__dirname, 'sync-files/meter_info.json'),
+  JSON.stringify(meters)
 )

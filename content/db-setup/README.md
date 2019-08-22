@@ -1,30 +1,10 @@
 ## DB Setup
 
-### Step 1 - Generate Reference Data
-Run the scripts using Node.js 10+ like so:
+Run the `db-setup.sh` file in this directory to:
 
-```
-node scripts/generate-meters.js
-node scripts/generate-streets.js
-```
-
-
-### Step 2 - Deploy PostgreSQL
-
-```
-oc login -u admin
-oc new-project city-of-pawnee
-oc new-app postgresql-persistent \
---param=POSTGRESQL_DATABASE=city-info \
---param=VOLUME_CAPACITY=1Gi \
---param=POSTGRESQL_VERSION=9.6 \
---param=POSTGRESQL_USER=rhte-admin \
---param=POSTGRESQL_PASSWORD=changethistosomethingelse
-```
-
-### Step 3 - Create Tables
-
-```
-# TODO
-oc port-forward etc.
-```
+1. Create the city namespace
+2. Create a persistent PostgreSQL deployment
+3. Create CSV files containing data
+4. Copy `.csv` and `.sql` files to the container
+5. Create some database users
+6. Run the `.sql` file to setup the database
