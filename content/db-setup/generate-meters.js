@@ -8,7 +8,7 @@ const { resolve } = require('path')
 const { argv } = require('yargs')
 
 const dataset = require(
-  resolve(__dirname, '../../data/samples/parking-sample.raw.json')
+  resolve(__dirname, '../../data/samples/meter-sample.raw.json')
 )
 
 const meters = dataset.features.map((m, id) => {
