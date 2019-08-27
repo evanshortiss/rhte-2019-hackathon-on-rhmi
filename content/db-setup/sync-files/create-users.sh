@@ -6,3 +6,6 @@ do
   psql -d city-info -c "CREATE USER $USER_USERNAME WITH LOGIN ENCRYPTED PASSWORD '$USER_PASSWORD';"
   psql -d city-info -c "GRANT readaccess TO $USER_USERNAME;"
 done
+
+echo "Making rhte-admin a superuser"
+psql -d city-info -c "ALTER USER \"rhte-admin\" WITH SUPERUSER;"
