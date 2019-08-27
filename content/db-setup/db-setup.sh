@@ -1,28 +1,60 @@
-OC_USER=$(oc whoami)
+# Exits if any commands fail
+set -e
+
+# The name we'll give our DB project
 OC_PROJECT="city-of-pawnee"
 
-if [ $OC_USER != "admin" ]
+echo "Performing requirements checks"
+
+if ! [ -x "$(command -v oc)" ]
 then
-  echo "please run \"oc login -u admin\" before using this script"
+  echo 'please install the openshift (oc) CLI' >&2
   exit 1
 fi
 
+if ! [ -x "$(command -v node)" ]
+then
+  echo 'please install node.js v10 or newer' >&2
+  exit 1
+fi
+
+if ! [ -x "$(command -v jq)" ]
+then
+  echo 'please install jq' >&2
+  exit 1
+fi
+
+OC_USER=$(oc whoami)
+
+if [ $OC_USER != "admin" ]
+then
+  echo "please run \"oc login -u admin\" on the RHMI cluster before using this script"
+  exit 1
+fi
+
+echo "Checking for existing project named $OC_PROJECT"
+OC_PROJECT_EXISTS=$(oc projects | grep 'city-of-pawnee' || true)
+
 # Delete old project if it exists
-oc delete project $OC_PROJECT
-echo "Waiting 30 seconds for old namespace resources to delete"
-sleep 30
+if [ "$OC_PROJECT_EXISTS" != "" ]
+then
+  echo "Deleting existing project"
+  oc delete project $OC_PROJECT
+  echo "Waiting 30 seconds for old namespace resources to delete"
+  sleep 30
+fi
 
 # Setup postgres in an openshift namespace
 oc new-project $OC_PROJECT
 
 oc new-app postgresql-persistent \
 --param=POSTGRESQL_DATABASE=city-info \
---param=VOLUME_CAPACITY=1Gi \
+--param=VOLUME_CAPACITY=10Gi \
 --param=POSTGRESQL_VERSION=9.6 \
 --param=POSTGRESQL_USER=rhte-admin \
 --param=POSTGRESQL_PASSWORD=changethistosomethingelse
 
-echo "\nWaiting 90 seconds for PostgreSQL to start"
+echo "\nWaiting 90 seconds for PostgreSQL to start. Current time is $(date)"
 sleep 90
 
 # Generate data in JSON format, then convert to CSV and delete JSON
@@ -39,7 +71,7 @@ POSTGRES_POD=$(oc get pods -o json | jq -r '.items[0].metadata.name')
 # Should probably create a custom volume for these next bits:
 # Create a new dir, copy files, run db-setup
 echo "Create /var/lib/pgsql/data/setup-files directory"
-oc exec $POSTGRES_POD mkdir /var/lib/pgsql/data/setup-files
+oc exec $POSTGRES_POD -- bash -c 'mkdir /var/lib/pgsql/data/setup-files'
 echo "oc rsync db setup script and CSV files"
 oc rsync sync-files/ $POSTGRES_POD:/var/lib/pgsql/data/setup-files
 echo "Run db-setup.sql"
