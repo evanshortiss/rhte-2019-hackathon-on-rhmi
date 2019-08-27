@@ -1,7 +1,7 @@
 # Exits if any commands fail
 set -e
 
-# The name we'll give our DB project
+# The name we'll give our PostgreSQL project
 OC_PROJECT="city-of-pawnee"
 
 echo "Performing requirements checks"
@@ -25,7 +25,6 @@ then
 fi
 
 OC_USER=$(oc whoami)
-
 if [ $OC_USER != "admin" ]
 then
   echo "please run \"oc login -u admin\" on the RHMI cluster before using this script"
@@ -40,8 +39,8 @@ if [ "$OC_PROJECT_EXISTS" != "" ]
 then
   echo "Deleting existing project"
   oc delete project $OC_PROJECT
-  echo "Waiting 30 seconds for old namespace resources to delete"
-  sleep 30
+  echo "Waiting 60 seconds for old namespace resources to delete. Current time $(date)"
+  sleep 60
 fi
 
 # Setup postgres in an openshift namespace
