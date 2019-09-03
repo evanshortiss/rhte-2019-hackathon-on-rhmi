@@ -20,7 +20,7 @@ oc rsh $POSTGRES_POD
 Use the following to test the database from the rsh session:
 
 ```bash
-# Connect to postgres as an evals user
+# Connect to postgres as an evals user, password is "Password1"
 psql -U evals01 -d city-info -W
 ```
 
