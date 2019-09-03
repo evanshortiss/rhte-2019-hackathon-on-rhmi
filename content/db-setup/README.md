@@ -33,6 +33,6 @@ select * from junction_info;
 -- Should list results with id, address, lat, and long
 select * from meter_info;
 
--- Should fail since evals users do not have write access
+-- Should fail since evals users do not have write access to the city-info db
 UPDATE meter_info SET address='oops' WHERE id=0;
 ```

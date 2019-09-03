@@ -2,7 +2,7 @@
 set -e
 
 # The name we'll give our PostgreSQL project
-OC_PROJECT="city-of-pawnee"
+OC_PROJECT="city-of-losangeles"
 
 echo "Performing requirements checks"
 
@@ -32,15 +32,15 @@ then
 fi
 
 echo "Checking for existing project named $OC_PROJECT"
-OC_PROJECT_EXISTS=$(oc projects | grep 'city-of-pawnee' || true)
+OC_PROJECT_EXISTS=$(oc projects | grep $OC_PROJECT || true)
 
 # Delete old project if it exists
 if [ "$OC_PROJECT_EXISTS" != "" ]
 then
   echo "Deleting existing project"
   oc delete project $OC_PROJECT
-  echo "Waiting 60 seconds for old namespace resources to delete. Current time $(date)"
-  sleep 60
+  echo "Waiting 90 seconds for old namespace resources to delete. Current time is $(date)"
+  sleep 90
 fi
 
 # Setup postgres in an openshift namespace
@@ -58,8 +58,7 @@ sleep 90
 
 # Generate data in JSON format, then convert to CSV and delete JSON
 echo "Generating junction_info and meter_info CSV from JSON"
-node generate-meters.js
-node generate-junctions.js
+node generate-csv.js
 npx json2csv -i sync-files/meter_info.json -o sync-files/meter_info.csv
 npx json2csv -i sync-files/junction_info.json -o sync-files/junction_info.csv
 rm sync-files/*.json
@@ -76,6 +75,6 @@ oc rsync sync-files/ $POSTGRES_POD:/var/lib/pgsql/data/setup-files
 echo "Run db-setup.sql"
 oc exec $POSTGRES_POD -- bash -c 'psql -U postgres -f /var/lib/pgsql/data/setup-files/db-setup.sql'
 echo "Run create-users.sh"
-oc exec $POSTGRES_POD -- bash -c 'sh /var/lib/pgsql/data/setup-files/create-users.sh'
+oc exec $POSTGRES_POD -- bash -c 'sh /var/lib/pgsql/data/setup-files/create-users-and-dbs.sh'
 
 echo "\nFinished!\n"
