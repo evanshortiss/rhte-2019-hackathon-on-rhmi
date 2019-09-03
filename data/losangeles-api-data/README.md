@@ -1,6 +1,7 @@
 ## Traffic/Parking Sample Data
 
-This demo uses data scraped for the LA City APIs for traffic and parking.
+This hackathon uses data scraped for the LA City APIs for traffic and parking.
+Our PostgreSQL database setup uses this data.
 
 ## Explanation of File Names
 
@@ -10,7 +11,6 @@ folder using the `generate-junctions.js` and `generate-meters.js` scripts in
 the *db-setup* folder in this repo.
 * `*-sample.formatted.json` is data collected from LA City GeoHub and formatted nicely.
 * `*-sample.raw.json` is data collected from LA City GeoHub that has not been formatted.
-
 
 ## Fetching the Data
 
