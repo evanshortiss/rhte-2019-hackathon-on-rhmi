@@ -5,7 +5,7 @@ This repository contains a Solution Pattern that's compatible with the
 
 ## Development Setup
 
-Setup requires installation of Node.js 10 or later. This enables a Git hook
+Setup requires installation of Node.js 10.15 or later. This enables a Git hook
 that verifies the asciidoc content and walkthrough config.
 
 ```bash

@@ -73,7 +73,7 @@ oc exec $POSTGRES_POD -- bash -c 'mkdir /var/lib/pgsql/data/setup-files'
 echo "oc rsync db setup script and CSV files"
 oc rsync sync-files/ $POSTGRES_POD:/var/lib/pgsql/data/setup-files
 echo "Run db-setup.sql"
-oc exec $POSTGRES_POD -- bash -c 'psql -U postgres -f /var/lib/pgsql/data/setup-files/db-setup.sql'
+oc exec $POSTGRES_POD -- bash -c 'psql -U postgres -f /var/lib/pgsql/data/setup-files/reference-data-db-setup.sql'
 echo "Run create-users.sh"
 oc exec $POSTGRES_POD -- bash -c 'sh /var/lib/pgsql/data/setup-files/create-users-and-dbs.sh'
 
