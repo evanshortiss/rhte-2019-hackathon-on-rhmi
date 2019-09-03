@@ -68,17 +68,57 @@ Use the following details to connect:
 . Database: `city-info`
 . Port: `5432`
 
-The customer has also provisioned a database for recording IoT sensor data in
-a second database. You have admin access to this database.
+The following tables and permissions are available to you:
 
-Use the following details to connect:
+. SELECT on junction_info
+. SELECT on meter_info
+. ALL on junction_status_{user-sanitized-username}
+. ALL on meter_status_{user-sanitized-username}
 
-. Username: `{user-sanitized-username}`
-. Password: `Password1`
-. Hostname: `postgresql.city-of-losangeles.svc`
-. Database: `{user-sanitized-username}-db`
-. Port: `5432`
+Here are the schemas for each table:
 
+*meter_info*
+
+----
+  Column   |  Type   |                        Modifiers                        | Storage  |
+-----------+---------+---------------------------------------------------------+----------+
+ id        | integer | not null default nextval('meter_info_id_seq'::regclass) | plain    |
+ address   | text    | not null                                                | extended |
+ latitude  | real    | not null                                                | plain    |
+ longitude | real    | not null                                                | plain    |
+----
+
+*junction_info*
+
+----
+    Column     |  Type   |                         Modifiers                          | Storage  |
+---------------+---------+------------------------------------------------------------+----------+
+ id            | integer | not null default nextval('junction_info_id_seq'::regclass) | plain    |
+ junction_name | text    | not null                                                   | extended |
+ latitude      | real    | not null                                                   | plain    |
+ longitude     | real    | not null                                                   | plain    |
+----
+
+*junction_status_{user-sanitized-username}*
+
+----
+    Column   |  Type   |                                  Modifiers                                   | Storage |
+-------------+---------+------------------------------------------------------------------------------+---------+
+ id          | integer | not null default nextval('junction_status_evals01_id_seq'::regclass)         | plain   |
+ junction_id | integer | not null default nextval('junction_status_evals01_junctionid_seq'::regclass) | plain   |
+ count_ns    | integer | not null                                                                     | plain   |
+ count_ew    | integer | not null                                                                     | plain   |
+----
+
+*meter_status_{user-sanitized-username}*
+
+----
+   Column    |  Type   |                                 Modifiers                                 | Storage  |
+-------------+---------+---------------------------------------------------------------------------+----------+
+ id          | integer | not null default nextval('meter_status_evals01_id_seq'::regclass)         | plain    |
+ meter_id    | integer | not null default nextval('meter_status_evals01_junctionid_seq'::regclass) | plain    |
+ status_text | text    | not null                                                                  | extended |
+----
 
 === Parking & Junction Sensor Data Formats
 
@@ -90,7 +130,7 @@ follows.
 
 Each parking meter sensor emits a JSON payload like so:
 
-```
+----
 {
   // The meter identifier. The meterId corresponds to those in the city's
   // meter_info table in the city-info database
@@ -102,12 +142,12 @@ Each parking meter sensor emits a JSON payload like so:
   // Can be "available", "occupied", "unknown", or "out-of-service"
   "status": "available"
 }
-```
+----
 
 Each junction has a sensor that detects traffic in north-south and east-west
 directions. The JSON payload they send to AMQ Streams looks as follows:
 
-```
+----
 {
   // The meter identifier. The junctionId corresponds to those in the city's
   // meter_info table in the city-info database
@@ -123,4 +163,4 @@ directions. The JSON payload they send to AMQ Streams looks as follows:
     "ns": 5
   }
 }
-```
+----
