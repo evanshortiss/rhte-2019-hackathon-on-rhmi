@@ -1,0 +1,33 @@
+{
+  "name": "parking-and-junction-data-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Simulates JSON payloads for Meters and Junctions as described in the RHTE 2019 RHMI Hackathon",
+  "main": "index.js",
+  "scripts": {
+    "start": "node generate.js",
+    "format": "standard --fix generate.js",
+    "nodeshift": "nodeshift --namespace.name city-of-losangeles"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm format"
+    }
+  },
+  "keywords": [],
+  "author": "Evan Shortiss",
+  "license": "MIT",
+  "dependencies": {
+    "barelog": "~0.1.0",
+    "csvtojson": "~2.0.10",
+    "env-var": "~5.0.0",
+    "make-promises-safe": "~5.0.0",
+    "pg": "~7.12.1",
+    "weighted-random": "~0.1.0"
+  },
+  "devDependencies": {
+    "husky": "~3.0.5",
+    "nodeshift": "~3.1.1",
+    "standard": "~14.1.0"
+  }
+}
