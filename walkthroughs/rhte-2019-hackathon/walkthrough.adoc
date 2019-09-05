@@ -1,6 +1,40 @@
+:kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
+:postgres-connection-url: todo-connection-url
+:postgres-username: todo-username
+:postgres-password: todo-password
+
+
 = RHTE 2019 RHMI Hackathon
 
-Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon! Click the
+Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon!
+
+Red Hat Managed Integration (RHMI) delivers cloud-based agile integration services hosted on OpenShift Dedicated (OSD). Using RHMI we can create consistent, immediately available, managed environments so that development teams can more easily build enterprise applications on OpenShift.
+These environments accelerate engagement timelines, reduce operational risk and cost, and address the needs of the evolving enterprise integration market.
+
+In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles. Attendees will form teams of 4 people and will self organise to complete the following tasks:
+
+* Data ingestion of real time traffic and parking meter data from AMQ Streams into a Postgres Database using Red Hat Fuse Online
+* Definition of an OpenAPI compatible API Spec using Apicurio
+* Implementation of this API using your choice of Runtime technologies - Fuse, Spring Boot, Vert.x or Node.js
+* Protection of the API using 3scale API Management
+* Visualisation of the data from the API via front end web app based on React.js and Patternfly.js
+
+To get you started, you will be provided with the following infrastructure:
+
+* An AMQ Streams instance with 2 topics - `traffic` and `meters`. These topics will be connected to a live stream of IoT data which needs to be ingested
+* A PostgreSQL server with two databases:
+- A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
+- An empty database, with pre defined schemas for storing the live IoT traffic and sensor data.
+* Access to the Apicurio API designer tool for creating the OPenAPI Spec compatible API definition
+* Outline reference implementations of the API Server in Fuse, Spring Boot, Vert.x and Node.js which will have a single API definition implemented and connectivity to Postgres pre-configured
+* Access to 3scale API Management service for protecting your API
+* Outline reference implementations of the front end web app with a single API call implemented
+
+The architecture diagram below provides an overview of the complete solution and highlights what infrastructure is provided and which parts need to be implemented as part of this Hackaton.
+
+image::images/arch.png[integration, role="integr8ly-img-responsive"]
+
+Click the
 *Get Started* button to view the hackathon brief and to view specific
 requirements.
 
@@ -49,10 +83,226 @@ requirements.
 * link:https://www.redhat.com/en/technologies/jboss-middleware/3scale[Overview, window="_blank"]
 ****
 
-[time=240]
-== Get Hacking
+[time=30]
+== Data Ingestion from AMQ Streams to Postgres using Fuse Online
 
-TODO - Place abstract content here.
+[id='creating-connections']
+== Creating connections
+:context: creating-connections
+
+// tag::creating-amq-streams-connection-in-fuse[]
+
+[id='creating-amq-streams-connection-in-fuse_{context}']
+[.integr8ly-docs-header]
+=== Creating an AMQ Streams Connector in Red Hat Fuse Online
+
+Fuse Online is an enterprise integration platform that provides connectors for many services, such as AMQ Streams and Postgres.
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-1"] console.
+
+. Select *Connections* from the left hand menu.
+
+. Select the *Create Connection* button to start the *Create Connection* wizard.
+
+. When prompted with *Select Connector*, select *Kafka Message Broker*.
+
+. When prompted with *Configure connection*:
+.. Enter the following in the *Kafka Broker URIs* field:
++
+[subs="attributes+", id="kafka-broker-uri"]
+----
+{kafka-broker-uri}
+----
+.. Click the Validate button to ensure the connection to AMQ Streams is configured correctly.
+.. You should see the message `Kafka Message Broker has been successfully validated`.
+.. Click Next to move onto the *Name connection* step
+
+. When prompted with *Name connection*:
+.. Enter the following in the *Name* field:
++
+----
+AMQ Streams Message Broker
+----
+.. Click *Save*.
+
+
+[type=verification]
+Is the new connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-4"] console?
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
+
+
+// end::creating-amq-streams-connection-in-fuse[]
+
+[id='creating-postgres-connection-in-fuse_{context}']
+[.integr8ly-docs-header]
+=== Creating Postgres connection in Red Hat Fuse Online
+
+To allow Fuse Online to store data consumed from AMQ Streams, we need to create a new Database connection in Red Hat Fuse Online.
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-5"] console.
+
+. Select *Connections* from the left hand menu.
+
+. Select the *Create Connection* button to start the *Create Connection* wizard.
+
+. Select *Database* to configure a *Postgres* connection.
+
+. Enter the connection URL:
++
+[subs="attributes+"]
+----
+{postgres-connection-url}
+----
+
+. Enter the Username:
++
+[subs="attributes+"]
+----
+{postgres-username}
+----
+
+. Enter the password:
++
+[subs="attributes+"]
+----
+{postgres-password}
+----
+
+. Leave the Schema field blank for now.
+
+. Select the *Validate* button to check that the values are valid.
+
+. Click *Next* and enter a name for the connection, for example:
++
+[subs="attributes+"]
+----
+PostgresDB
+----
+
+. Click *Save*.
+
+
+[type=verification]
+Is the new connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-6"] console?
+
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
+
+
+// end::creating-postgres-connection-in-fuse[]
+
+[type=taskResource]
+.Task Resources
+****
+* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/integrating_applications_with_fuse_online/connecting-to-applications_ug#about-creating-connections_connections[About creating connections from Fuse Online to applications, window="_blank"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/connecting_fuse_online_to_applications_and_services/#supported-connectors_connectors[Connectors that are supported by Fuse Online, window="_blank"]
+* link:https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol[About AMQP, window="_blank"]
+****
+
+[time=5]
+[id='creating-an-integration']
+== Creating an integration
+:context: creating-an-integration
+
+// end::task-creating-fuse-integration[]
+
+
+To use the Fuse connections, create an integration in Red Hat Fuse Online.
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="wt1a_2_3_1_fuse-url"] console.
+
+. Select *Integrations* from the left hand menu.
+
+. Select the *Create Integration* button to start the *Create Integration* wizard.
+
+. Choose *Walkthrough 1A Messaging App* as the *Start Connection*.
+
+. When prompted to *Choose an Action*, select *Subscribe for messages*.
+
+. When prompted for a *Destination Name*, enter:
++
+[subs="attributes+"]
+----
+work-queue-requests
+----
+
+. Choose *Queue* as the *Destination Type* and click *Next*.
+
+. When prompted to *Specify Output Data Type*:
+.. Select *JSON Schema* as the type.
+.. Enter the following in the *Definition* field:
++
+[subs="attributes+"]
+----
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"type": {
+			"type": "string"
+		}
+	}
+}
+----
+.. Click *Next*.
+
+. Choose *Walkthrough 1A CRUD Connection* as the *Finish Connection*.
+
+. When prompted to *Choose an Action*, select *Create a fruit*.
+
+. When prompted with *Configure the action* click *Next*.
+
+. When prompted to *Add to Integration*, click on the blue *+* icon in the left panel.
+
+. Select *Data Mapper* to map source and target fields in the corresponding JSON schemas:
+.. Expand the *body* item in the *Target* tree to reveal the *name* item.
+.. Click and drag *type* from the *Source* column to *body/name* in the *Target* column.
+.. Click *Done* to navigate back to the *Integration* screen.
+
+. Click *Publish*.
+. When prompted, enter a name, for example:
++
+[subs="attributes+"]
+----
+Walkthrough 1A
+----
+. Click *Save and publish*.
+
+. Monitor the *Integration Summary* dashboard until a green check mark is displayed beside the new integration.
+The integration may take some time to complete building.
+
+[type=verification]
+Is the integration displayed as *Running* on the *Integration* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-1"] console?
+
+[type=verificationFail]
+
+****
+. Wait for the integration to appear. This can take several minutes.
+
+. Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
+****
+// end::task-creating-fuse-integration[]
+
+
+[type=taskResource]
+.Task Resources
+****
+* https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/integrating_applications_with_fuse_online/creating-integrations_ug#creating-integrations_ug[Creating integrations, window="_blank"]
+****
+
+
+
+
+
+[time=30]
+== API Definition using Apicurio
+
+
+[time=90]
+== API Implementation
 
 === PostgreSQL Details
 
@@ -68,99 +318,10 @@ Use the following details to connect:
 . Database: `city-info`
 . Port: `5432`
 
-The following tables and permissions are available to you:
 
-. SELECT on junction_info
-. SELECT on meter_info
-. ALL on junction_status_{user-sanitized-username}
-. ALL on meter_status_{user-sanitized-username}
+[time=30]
+== API Protection using 3scale API Management
 
-Here are the schemas for each table:
 
-*meter_info*
-
-----
-  Column   |  Type   |                        Modifiers                        | Storage  |
------------+---------+---------------------------------------------------------+----------+
- id        | integer | not null default nextval('meter_info_id_seq'::regclass) | plain    |
- address   | text    | not null                                                | extended |
- latitude  | real    | not null                                                | plain    |
- longitude | real    | not null                                                | plain    |
-----
-
-*junction_info*
-
-----
-    Column     |  Type   |                         Modifiers                          | Storage  |
----------------+---------+------------------------------------------------------------+----------+
- id            | integer | not null default nextval('junction_info_id_seq'::regclass) | plain    |
- junction_name | text    | not null                                                   | extended |
- latitude      | real    | not null                                                   | plain    |
- longitude     | real    | not null                                                   | plain    |
-----
-
-*junction_status_{user-sanitized-username}*
-
-----
-    Column   |  Type   |                                  Modifiers                                   | Storage |
--------------+---------+------------------------------------------------------------------------------+---------+
- id          | integer | not null default nextval('junction_status_evals01_id_seq'::regclass)         | plain   |
- junction_id | integer | not null default nextval('junction_status_evals01_junctionid_seq'::regclass) | plain   |
- count_ns    | integer | not null                                                                     | plain   |
- count_ew    | integer | not null                                                                     | plain   |
-----
-
-*meter_status_{user-sanitized-username}*
-
-----
-   Column    |  Type   |                                 Modifiers                                 | Storage  |
--------------+---------+---------------------------------------------------------------------------+----------+
- id          | integer | not null default nextval('meter_status_evals01_id_seq'::regclass)         | plain    |
- meter_id    | integer | not null default nextval('meter_status_evals01_junctionid_seq'::regclass) | plain    |
- status_text | text    | not null                                                                  | extended |
-----
-
-=== Parking & Junction Sensor Data Formats
-
-As described in the abstract, you need to process incoming data from IoT
-sensors installed in the city's parking meters and traffic junctions.
-
-This data will be available from AMQ Streams and the data formats are as
-follows.
-
-Each parking meter sensor emits a JSON payload like so:
-
-----
-{
-  // The meter identifier. The meterId corresponds to those in the city's
-  // meter_info table in the city-info database
-  "meterId": 62,
-
-  // When the payload was sent from this sensor
-  "timestamp": 1566432096257,
-
-  // Can be "available", "occupied", "unknown", or "out-of-service"
-  "status": "available"
-}
-----
-
-Each junction has a sensor that detects traffic in north-south and east-west
-directions. The JSON payload they send to AMQ Streams looks as follows:
-
-----
-{
-  // The meter identifier. The junctionId corresponds to those in the city's
-  // meter_info table in the city-info database
-  "junctionId": 35,
-
-  // When the payload was sent from this sensor
-  "timestamp": 1566432096257,
-
-  // How many cars passed east-west and north-south directions at this
-  // junction in the last minute
-  "counts": {
-    "ew": 2,
-    "ns": 5
-  }
-}
-----
+[time=90]
+== Front end visualisation using React.js and Patternfly.js
