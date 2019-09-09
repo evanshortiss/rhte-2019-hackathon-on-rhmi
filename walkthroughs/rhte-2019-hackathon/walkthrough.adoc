@@ -1,8 +1,14 @@
-:kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
-:postgres-connection-url: todo-connection-url
-:postgres-username: todo-username
-:postgres-password: todo-password
+:username: evals01
 
+:kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
+:fuse-streams-connection-name: AMQ Streams Message Broker
+:fuse-database-connection-name: PostgresDB
+:streams-topic-name: traffic
+
+:postgres-connection-url: jdbc:postgresql://postgresql.city-of-losangeles.svc:5432/city-info
+:postgres-username: {username}
+:postgres-password: Password1
+:postgres-junction-status-table: junction_status_{username}
 
 = RHTE 2019 RHMI Hackathon
 
@@ -19,6 +25,7 @@ In this hackathon you’re tasked with building out a real-time IoT traffic and 
 * Protection of the API using 3scale API Management
 * Visualisation of the data from the API via front end web app based on React.js and Patternfly.js
 
+
 To get you started, you will be provided with the following infrastructure:
 
 * An AMQ Streams instance with 2 topics - `traffic` and `meters`. These topics will be connected to a live stream of IoT data which needs to be ingested
@@ -30,13 +37,11 @@ To get you started, you will be provided with the following infrastructure:
 * Access to 3scale API Management service for protecting your API
 * Outline reference implementations of the front end web app with a single API call implemented
 
+
 The architecture diagram below provides an overview of the complete solution and highlights what infrastructure is provided and which parts need to be implemented as part of this Hackaton.
 
 image::images/arch.png[integration, role="integr8ly-img-responsive"]
 
-Click the
-*Get Started* button to view the hackathon brief and to view specific
-requirements.
 
 [type=walkthroughResource,serviceName=openshift]
 .Red Hat OpenShift
@@ -86,19 +91,13 @@ requirements.
 [time=30]
 == Data Ingestion from AMQ Streams to Postgres using Fuse Online
 
-[id='creating-connections']
-== Creating connections
-:context: creating-connections
-
-// tag::creating-amq-streams-connection-in-fuse[]
-
-[id='creating-amq-streams-connection-in-fuse_{context}']
-[.integr8ly-docs-header]
-=== Creating an AMQ Streams Connector in Red Hat Fuse Online
-
 Fuse Online is an enterprise integration platform that provides connectors for many services, such as AMQ Streams and Postgres.
+In this section we will create two connection - one to AMQ Streams and one to Postgres.
+We will then create an integration that uses these two connections and translates incoming data from AMQ streams into database insert statements on Postgres. 
 
-. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-1"] console.
+=== Creating the AMQ Streams Connector
+
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
 
 . Select *Connections* from the left hand menu.
 
@@ -109,7 +108,7 @@ Fuse Online is an enterprise integration platform that provides connectors for m
 . When prompted with *Configure connection*:
 .. Enter the following in the *Kafka Broker URIs* field:
 +
-[subs="attributes+", id="kafka-broker-uri"]
+[subs="attributes+"]
 ----
 {kafka-broker-uri}
 ----
@@ -120,28 +119,25 @@ Fuse Online is an enterprise integration platform that provides connectors for m
 . When prompted with *Name connection*:
 .. Enter the following in the *Name* field:
 +
+[subs="attributes+"]
 ----
-AMQ Streams Message Broker
+{fuse-streams-connection-name}
 ----
-.. Click *Save*.
+. Click *Save*.
 
 
 [type=verification]
-Is the new connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-4"] console?
+Is the new AMQ Streams connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-4"] console?
 
 [type=verificationFail]
 Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
 
 
-// end::creating-amq-streams-connection-in-fuse[]
-
-[id='creating-postgres-connection-in-fuse_{context}']
-[.integr8ly-docs-header]
-=== Creating Postgres connection in Red Hat Fuse Online
+=== Creating the Postgres Connector
 
 To allow Fuse Online to store data consumed from AMQ Streams, we need to create a new Database connection in Red Hat Fuse Online.
 
-. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-5"] console.
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
 
 . Select *Connections* from the left hand menu.
 
@@ -178,55 +174,36 @@ To allow Fuse Online to store data consumed from AMQ Streams, we need to create 
 +
 [subs="attributes+"]
 ----
-PostgresDB
+{fuse-database-connection-name}
 ----
 
 . Click *Save*.
 
 
 [type=verification]
-Is the new connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-6"] console?
-
+Is the new Postgres connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-6"] console?
 
 [type=verificationFail]
 Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
 
 
-// end::creating-postgres-connection-in-fuse[]
+=== Creating the integration between AMQ Streams and Postgres
 
-[type=taskResource]
-.Task Resources
-****
-* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/integrating_applications_with_fuse_online/connecting-to-applications_ug#about-creating-connections_connections[About creating connections from Fuse Online to applications, window="_blank"]
-* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/{fuse-version}/html-single/connecting_fuse_online_to_applications_and_services/#supported-connectors_connectors[Connectors that are supported by Fuse Online, window="_blank"]
-* link:https://en.wikipedia.org/wiki/Advanced_Message_Queuing_Protocol[About AMQP, window="_blank"]
-****
-
-[time=5]
-[id='creating-an-integration']
-== Creating an integration
-:context: creating-an-integration
-
-// end::task-creating-fuse-integration[]
-
-
-To use the Fuse connections, create an integration in Red Hat Fuse Online.
-
-. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="wt1a_2_3_1_fuse-url"] console.
+. Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
 
 . Select *Integrations* from the left hand menu.
 
 . Select the *Create Integration* button to start the *Create Integration* wizard.
 
-. Choose *Walkthrough 1A Messaging App* as the *Start Connection*.
+. Choose *{fuse-streams-connection-name}* as the connection that starts the integration.
 
-. When prompted to *Choose an Action*, select *Subscribe for messages*.
+. When prompted to *Choose an Action*, select *Subscribe*.
 
-. When prompted for a *Destination Name*, enter:
+. When prompted for a *Topic Name*, enter:
 +
 [subs="attributes+"]
 ----
-work-queue-requests
+{streams-topic-name}
 ----
 
 . Choose *Queue* as the *Destination Type* and click *Next*.
@@ -241,21 +218,35 @@ work-queue-requests
 	"$schema": "http://json-schema.org/draft-04/schema#",
 	"type": "object",
 	"properties": {
-		"type": {
-			"type": "string"
+		"junctionId" : { "type": "number" },
+		"timestamp" : { "type": "number" },
+		"counts" : { 
+			"type" : "object"
+			"properties" : {
+				"ns": { "type": "number" },
+				"ew": { "type": "number" }
+			}
 		}
 	}
 }
 ----
 .. Click *Next*.
 
-. Choose *Walkthrough 1A CRUD Connection* as the *Finish Connection*.
+. Choose *{fuse-database-connection-name}}* as the *Finish Connection*.
 
-. When prompted to *Choose an Action*, select *Create a fruit*.
+. When prompted to *Choose an Action*, select *Invoke SQL*.
 
-. When prompted with *Configure the action* click *Next*.
+. When prompted with *Configure the action*, enter the following:
+.. Enter the following in the *SQL statements* field:
++
+[subs="attributes+"]
+----
+INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, count_ew) VALUES (#junction_id, to_timestamp(#timestamp), #count_ns, #count_ew);
+----
+.. Leave *Batch update* set to *No*
+.. Clck *Next*
 
-. When prompted to *Add to Integration*, click on the blue *+* icon in the left panel.
+. When prompted to *Add to Integration*, click on the blue *+* icon between the *Subscribe* step and the *Invoke SQL* step.
 
 . Select *Data Mapper* to map source and target fields in the corresponding JSON schemas:
 .. Expand the *body* item in the *Target* tree to reveal the *name* item.
@@ -267,7 +258,7 @@ work-queue-requests
 +
 [subs="attributes+"]
 ----
-Walkthrough 1A
+IoT Traffic Data Ingestion
 ----
 . Click *Save and publish*.
 
