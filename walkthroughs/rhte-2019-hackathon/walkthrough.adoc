@@ -3,12 +3,17 @@
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
 :fuse-database-connection-name: PostgresDB
-:streams-topic-name: traffic
+:streams-traffic-topic-name: traffic
+:streams-meter-topic-name: meter
+:streams-traffic-data-integration: IoT Traffic Data Ingestion
+:streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
 :postgres-connection-url: jdbc:postgresql://postgresql.city-of-losangeles.svc:5432/city-info
 :postgres-username: {username}
 :postgres-password: Password1
 :postgres-junction-status-table: junction_status_{username}
+:postgres-meter-status-table: meter_status_{username}
+
 
 = RHTE 2019 RHMI Hackathon
 
@@ -187,7 +192,7 @@ Is the new Postgres connection displayed on the *Connections* screen of the link
 Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
 
 
-=== Creating the integration between AMQ Streams and Postgres
+=== Creating the integration between AMQ Streams and Postgres for traffic data
 
 . Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
 
@@ -203,7 +208,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 +
 [subs="attributes+"]
 ----
-{streams-topic-name}
+{streams-traffic-topic-name}
 ----
 
 . Choose *Queue* as the *Destination Type* and click *Next*.
@@ -221,7 +226,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 		"junctionId" : { "type": "number" },
 		"timestamp" : { "type": "number" },
 		"counts" : { 
-			"type" : "object"
+			"type" : "object",
 			"properties" : {
 				"ns": { "type": "number" },
 				"ew": { "type": "number" }
@@ -232,7 +237,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 ----
 .. Click *Next*.
 
-. Choose *{fuse-database-connection-name}}* as the *Finish Connection*.
+. Choose *{fuse-database-connection-name}* as the *Finish Connection*.
 
 . When prompted to *Choose an Action*, select *Invoke SQL*.
 
@@ -241,16 +246,20 @@ Verify that you followed each step in the procedure above.  If you are still hav
 +
 [subs="attributes+"]
 ----
-INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, count_ew) VALUES (#junction_id, to_timestamp(#timestamp), #count_ns, #count_ew);
+INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, count_ew) 
+VALUES (:#junction_id, to_timestamp(:#timestamp), :#count_ns, :#count_ew);
 ----
 .. Leave *Batch update* set to *No*
 .. Clck *Next*
 
 . When prompted to *Add to Integration*, click on the blue *+* icon between the *Subscribe* step and the *Invoke SQL* step.
 
-. Select *Data Mapper* to map source and target fields in the corresponding JSON schemas:
-.. Expand the *body* item in the *Target* tree to reveal the *name* item.
-.. Click and drag *type* from the *Source* column to *body/name* in the *Target* column.
+. Select *Data Mapper* to map the source fields in the AMQ Streams JSON schema to the placeholder parameters in the SQL Statement:
+.. Click and drag *junctionid* from the Source coulmn to *junction_id* in the *Target* column.
+.. Click and drag *timestamp* from the Source coulmn to *timestamp* in the *Target* column.
+.. Expand the *counts* object to expose the two child objects - *ew* and *ns*.
+.. Click and drag *ew* from the Source coulmn to *count_ew* in the *Target* column.
+.. Click and drag *ns* from the Source coulmn to *count_ns* in the *Target* column.
 .. Click *Done* to navigate back to the *Integration* screen.
 
 . Click *Publish*.
@@ -258,12 +267,12 @@ INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, 
 +
 [subs="attributes+"]
 ----
-IoT Traffic Data Ingestion
+{streams-traffic-data-integration}
 ----
 . Click *Save and publish*.
 
 . Monitor the *Integration Summary* dashboard until a green check mark is displayed beside the new integration.
-The integration may take some time to complete building.
+The integration may take a number of minutes to complete building.
 
 [type=verification]
 Is the integration displayed as *Running* on the *Integration* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-1"] console?
@@ -275,7 +284,55 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 
 . Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
 ****
-// end::task-creating-fuse-integration[]
+
+
+=== Creating the integration between AMQ Streams and Postgres for parking meter data
+
+. Repeat the steps above for the *{streams-traffic-data-integration}* integration, with the following changes:
+
+.. When prompted for a *Topic Name*, enter:
++
+[subs="attributes+"]
+----
+{streams-meter-topic-name}
+----
+.. Enter the following in the JSON Schema *Definition* field:
++
+[subs="attributes+"]
+----
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"meterId" : { "type": "number" },
+		"timestamp" : { "type": "number" },
+		"status" : { "type": "string" }
+	}
+}
+----
+.. When configuring the SQL Statement, enter the following:
++
+[subs="attributes+"]
+----
+INSERT INTO {postgres-meter-status-table} (meter_id, timestamp, status_text) 
+VALUES (:#meter_id, to_timestamp(:#timestamp), :#status_text);
+----
+.. When adding the *Data Mapper* map the 3 fields as follows:
+... statusId => ststus_id
+... timestamp => timestamp
+... status => status_text
+
+[type=verification]
+Is the integration displayed as *Running* on the *Integration* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-1"] console?
+
+[type=verificationFail]
+
+****
+. Wait for the integration to appear. This can take several minutes.
+
+. Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
+****
+
 
 
 [type=taskResource]
@@ -287,13 +344,14 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 
 
 
-
 [time=30]
 == API Definition using Apicurio
 
 
 [time=90]
 == API Implementation
+
+
 
 === PostgreSQL Details
 
