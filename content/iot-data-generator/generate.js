@@ -46,8 +46,9 @@ async function main () {
   // Set initial meter and junction states
   performUpdates()
 
-  // Simulate flushing sensors every minute
-  setInterval(performUpdates, 60 * 1000)
+  // Simulate flushing sensors every two minutes
+  // TODO - consider size of data being generated
+  setInterval(performUpdates, 90 * 1000)
 }
 
 function performUpdates () {
@@ -60,7 +61,7 @@ function performUpdates () {
 }
 
 function updateJunctions () {
-  const timestamp = Date.now()
+  const timestamp = getTimestamp()
 
   junctionList.forEach((j) => {
     // Junctions should meet a minimum threshold of 20% of their weight
@@ -72,6 +73,9 @@ function updateJunctions () {
       ns: Math.round(Math.max(min, Math.random() * j.weight))
     }
 
+    log('sending junction update', {
+      junctionId, timestamp, counts
+    })
     transport.insertJunctionUpdate(junctionId, timestamp, counts.ew, counts.ns)
   })
 }
@@ -80,7 +84,7 @@ function updateJunctions () {
  * Update meters per our planned paramaters
  */
 function updateMeters () {
-  const timestamp = Date.now()
+  const timestamp = getTimestamp()
 
   meterList.forEach(m => {
     const status = getWeightedRandomMeterStatus().text
@@ -88,6 +92,10 @@ function updateMeters () {
 
     // For convenient logging. This is not written in the db
     m.status = status
+
+    log('sending junction update', {
+      meterId, timestamp, status
+    })
 
     transport.insertMeterUpdate(meterId, timestamp, status)
   })
@@ -145,4 +153,8 @@ function getRandomInt (min, max) {
   max = Math.floor(max)
 
   return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function getTimestamp () {
+  return Math.round(Date.now() / 1000)
 }

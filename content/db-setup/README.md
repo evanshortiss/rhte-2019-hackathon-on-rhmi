@@ -1,5 +1,14 @@
 ## Reference Data PostgreSQL Setup
 
+## Requirements
+
+* Node.js 10+
+* npm 6+ (usually comes with Node.js 10)
+* [OpenShift CLI(`oc`)](https://github.com/openshift/origin/releases/tag/v3.11.0)
+* [jq CLI](https://stedolan.github.io/jq/)
+
+### Setup
+
 Run the `db-setup.sh` file in this directory to:
 
 1. Create the city namespace on the RHMI cluster

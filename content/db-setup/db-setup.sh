@@ -31,6 +31,9 @@ then
   exit 1
 fi
 
+echo "Installing npm dependencies"
+npm install
+
 echo "Checking for existing project named $OC_PROJECT"
 OC_PROJECT_EXISTS=$(oc projects | grep $OC_PROJECT || true)
 
