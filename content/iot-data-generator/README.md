@@ -73,10 +73,12 @@ npm run nodeshift
 
 ## Docker Build & Run
 
+The npm registry variables passed in the example are optional.
+
 ```
 export TAGNAME=rhte-2019-rhmi-iot-datagen
 
-docker build . -t $TAGNAME
+docker build --build-arg NPM_REGISTRY_URL=$REG_URL --build-arg NPM_CAFILE_URL=$REG_CA_URL . -t dil-streaming-earth-dashboard
 
 docker run rhte-2019-rhmi-iot-datagen:latest 
 ```
