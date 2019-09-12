@@ -1,0 +1,106 @@
+swagger: '2.0'
+info:
+    title: New API
+    description: A brand new API with no content.  Go nuts!
+    version: '1.0'
+consumes:
+    - application/json
+produces:
+    - application/json
+paths:
+    /meters:
+        get:
+            summary: List All Meters
+            description: Gets a list of all `Meter` entities.
+            operationId: getMeters
+            responses:
+                '200':
+                    description: Successful response - returns an array of `Meter` entities.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Meter'
+        parameters:
+            -
+                name: status
+                in: query
+                description: '[Optional] The status of the meters'
+                enum: []
+    '/meters/{meterId}':
+        get:
+            summary: Get a Meter
+            description: Gets the details of a single instance of a `Meter`.
+            operationId: getMeter
+            responses:
+                '200':
+                    description: Successful response - returns a single `Meter`.
+                    schema:
+                        $ref: '#/definitions/Meter'
+        parameters:
+            -
+                name: meterId
+                in: path
+                description: A unique identifier for a `Meter`.
+                required: true
+                type: string
+    /junctions:
+        get:
+            summary: List All Junctions
+            description: Gets a list of all `Junction` entities.
+            operationId: getJunctions
+            responses:
+                '200':
+                    description: Successful response - returns an array of `Junction` entities.
+                    schema:
+                        type: array
+                        items:
+                            $ref: '#/definitions/Junction'
+    '/junctions/{junctionId}':
+        get:
+            summary: Get a Junction
+            description: Gets the details of a single instance of a `Junction`.
+            operationId: getJunction
+            responses:
+                '200':
+                    description: Successful response - returns a single `Junction`.
+                    schema:
+                        $ref: '#/definitions/Junction'
+        parameters:
+            -
+                name: junctionId
+                in: path
+                description: A unique identifier for a `Junction`.
+                required: true
+                type: string
+definitions:
+    Meter:
+        type: object
+    Junction:
+        title: Root Type for Junction
+        description: The root of the Junction type's schema.
+        type: object
+        properties:
+            junction_id:
+                type: string
+            last_updated:
+                type: string
+            junction_name:
+                type: string
+            latitude:
+                type: string
+            longitude:
+                type: string
+            count_ns:
+                type: string
+            count_ew:
+                type: string
+        example: |-
+            {
+              "junction_id": "Integer",
+              "last_updated": "Timestamp",
+              "junction_name": "String",
+              "latitude": "Float",
+              "longitude": "Float",
+              "count_ns": "Integer",
+              "count_ew": "Integer"
+            }

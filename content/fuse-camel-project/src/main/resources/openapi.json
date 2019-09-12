@@ -1,0 +1,137 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "A brand new API with no content.  Go nuts!",
+    "version" : "1.0",
+    "title" : "New API"
+  },
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/meters" : {
+      "get" : {
+        "summary" : "List All Meters",
+        "description" : "Gets a list of all `Meter` entities.",
+        "operationId" : "getMeters",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns an array of `Meter` entities.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Meter"
+              }
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "status",
+        "in" : "query",
+        "description" : "[Optional] The status of the meters",
+        "required" : false,
+        "enum" : [ ]
+      } ]
+    },
+    "/meters/{meterId}" : {
+      "get" : {
+        "summary" : "Get a Meter",
+        "description" : "Gets the details of a single instance of a `Meter`.",
+        "operationId" : "getMeter",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns a single `Meter`.",
+            "schema" : {
+              "$ref" : "#/definitions/Meter"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "meterId",
+        "in" : "path",
+        "description" : "A unique identifier for a `Meter`.",
+        "required" : true,
+        "type" : "string"
+      } ]
+    },
+    "/junctions" : {
+      "get" : {
+        "summary" : "List All Junctions",
+        "description" : "Gets a list of all `Junction` entities.",
+        "operationId" : "getJunctions",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns an array of `Junction` entities.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Junction"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/junctions/{junctionId}" : {
+      "get" : {
+        "summary" : "Get a Junction",
+        "description" : "Gets the details of a single instance of a `Junction`.",
+        "operationId" : "getJunction",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Successful response - returns a single `Junction`.",
+            "schema" : {
+              "$ref" : "#/definitions/Junction"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "junctionId",
+        "in" : "path",
+        "description" : "A unique identifier for a `Junction`.",
+        "required" : true,
+        "type" : "string"
+      } ]
+    }
+  },
+  "definitions" : {
+    "Meter" : {
+      "type" : "object"
+    },
+    "Junction" : {
+      "type" : "object",
+      "properties" : {
+        "junction_id" : {
+          "type" : "string"
+        },
+        "last_updated" : {
+          "type" : "string"
+        },
+        "junction_name" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "string"
+        },
+        "count_ns" : {
+          "type" : "string"
+        },
+        "count_ew" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Root Type for Junction",
+      "description" : "The root of the Junction type's schema.",
+      "example" : "{\n  \"junction_id\": \"Integer\",\n  \"last_updated\": \"Timestamp\",\n  \"junction_name\": \"String\",\n  \"latitude\": \"Float\",\n  \"longitude\": \"Float\",\n  \"count_ns\": \"Integer\",\n  \"count_ew\": \"Integer\"\n}"
+    }
+  }
+}
