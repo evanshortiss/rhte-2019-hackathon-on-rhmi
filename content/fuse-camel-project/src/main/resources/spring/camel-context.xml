@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <camelContext id="context-e996ce96-e360-4a40-8b3e-c7c61cf5f712" xmlns="http://camel.apache.org/schema/spring">
+
+        <onException>
+            <exception>java.lang.Exception</exception>
+            <handled><constant>true</constant></handled>
+            <setHeader headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>500</constant>
+            </setHeader>
+            <setBody>
+                <simple>${exception.message}</simple>
+            </setBody>
+        </onException>
+
+        <restConfiguration component="servlet" apiContextPath="/openapi.json"/>
+
+        <rest id="rest-for-openapi-document" path="/" enableCORS="true">
+            <get id="openapi.json" produces="application/json" uri="openapi.json">
+                <description>Gets the OpenAPI document for this service</description>
+                <route id="route-for-openapi-document">
+                    <setHeader id="setHeader-for-openapi-document" headerName="Exchange.CONTENT_TYPE">
+                        <constant>application/vnd.oai.openapi+json</constant>
+                    </setHeader>
+                    <setBody id="setBody-for-openapi-document">
+                        <constant>resource:classpath:openapi.json</constant>
+                    </setBody>
+                </route>
+            </get>
+        </rest>
+
+        <rest bindingMode="json" enableCORS="true" id="rest-5eb3d79c-2044-4fb5-9efd-865c5bc5ddc8">
+            <get id="getMeters" uri="/meters">
+                <description>Gets a list of all `Meter` entities.</description>
+                <to uri="direct:getMeters"/>
+            </get>
+            <get id="getMeter" uri="/meters/{meterId}">
+                <description>Gets the details of a single instance of a `Meter`.</description>
+                <to uri="direct:getMeter"/>
+            </get>
+            <get id="getJunctions" uri="/junctions">
+                <description>Gets a list of all `Junction` entities.</description>
+                <to uri="direct:getJunctions"/>
+            </get>
+            <get id="getJunction" uri="/junctions/{junctionId}">
+                <description>Gets the details of a single instance of a `Junction`.</description>
+                <to uri="direct:getJunction"/>
+            </get>
+        </rest>
+
+        <route id="route-2197c95d-cef2-451e-b387-801d06a371c3">
+            <from id="from-fae1690e-44e9-49af-918a-27dd109a2e75" uri="direct:getMeters"/>
+            <to id="to-1f6b2ee9-18aa-4309-a566-46c21b72c4a1" uri="direct:501"/>
+        </route>
+        <route id="route-9a3601f8-d21a-4e75-955f-9f7130029c15">
+            <from id="from-7b9ccd40-8f95-481f-8d4a-18353ffb1132" uri="direct:getMeter"/>
+            <to id="to-4d6ad8be-5253-4a88-8e35-61a10b58fd4a" uri="direct:501"/>
+        </route>
+        <route id="route-9aa5ec86-3650-4f26-bfe4-9b416b5a81b0">
+            <from id="from-c0d38133-cbe3-468a-86c3-f9b18e8da4f2" uri="direct:getJunctions"/>
+            <to id="to-cf51214a-a45c-4446-88bc-7c70076b0e8c" uri="direct:501"/>
+        </route>
+        <route id="route-149b46f6-32f6-4294-ad7b-586b2f45c0c0">
+            <from id="from-02c53535-b28f-447b-b487-3e6b0dc02adb" uri="direct:getJunction"/>
+            <to id="to-e655e952-7f44-4e24-aeef-05ab49ade471" uri="direct:501"/>
+        </route>
+
+        <route id="route-for-unimplemented-operations">
+            <from id="from-for-unimplemented-operations-route" uri="direct:501"/>
+            <log id="log-for-unimplemented-operations-route" message="API operation not yet implemented: ${headers.CamelHttpMethod} ${headers.CamelHttpPath}"/>
+            <setHeader id="setHeader-for-unimplemented-operations-route" headerName="Exchange.HTTP_RESPONSE_CODE">
+                <constant>501</constant>
+            </setHeader>
+            <setBody id="setBody-for-unimplemented-operations-route">
+                <simple>API operation not implemented: ${headers.CamelHttpMethod} ${headers.CamelHttpPath}</simple>
+            </setBody>
+        </route>
+
+    </camelContext>
+</beans>

@@ -1,4 +1,4 @@
-:username: evals01
+:username: {user-sanitized-username}
 
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
@@ -8,11 +8,19 @@
 :streams-traffic-data-integration: IoT Traffic Data Ingestion
 :streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
-:postgres-connection-url: jdbc:postgresql://postgresql.city-of-losangeles.svc:5432/city-info
+:postgres-hostname: postgresql.city-of-losangeles.svc
+:postgres-port: 5432
+:postgres-database: city-info
+:postgres-connection-url: jdbc:postgresql://{postgres-hostname}:{postgres-port}/{postgres-database}
 :postgres-username: {username}
 :postgres-password: Password1
+:postgres-junction-lookup-table: junctionm_info
+:postgres-meter-lookup-table: meter_info
 :postgres-junction-status-table: junction_status_{username}
 :postgres-meter-status-table: meter_status_{username}
+
+:oas3-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md
+:oas3-data-types-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
 
 
 = RHTE 2019 RHMI Hackathon
@@ -28,20 +36,22 @@ In this hackathon you’re tasked with building out a real-time IoT traffic and 
 * Definition of an OpenAPI compatible API Spec using Apicurio
 * Implementation of this API using your choice of Runtime technologies - Fuse, Spring Boot, Vert.x or Node.js
 * Protection of the API using 3scale API Management
-* Visualisation of the data from the API via front end web app based on React.js and Patternfly.js
+* Visualisation of the data from the API via a front end web app based on React.js and Patternfly.js
 
+{blank}
 
 To get you started, you will be provided with the following infrastructure:
 
-* An AMQ Streams instance with 2 topics - `traffic` and `meters`. These topics will be connected to a live stream of IoT data which needs to be ingested
+* An AMQ Streams instance with 2 topics - `{streams-traffic-topic-name}` and `{streams-meter-topic-name}`. These topics will be connected to a live stream of IoT data which needs to be ingested
 * A PostgreSQL server with two databases:
 - A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
-- An empty database, with pre defined schemas for storing the live IoT traffic and sensor data.
+- An empty database, with pre defined schemas for storing the live IoT traffic and sensor data
 * Access to the Apicurio API designer tool for creating the OPenAPI Spec compatible API definition
 * Outline reference implementations of the API Server in Fuse, Spring Boot, Vert.x and Node.js which will have a single API definition implemented and connectivity to Postgres pre-configured
 * Access to 3scale API Management service for protecting your API
 * Outline reference implementations of the front end web app with a single API call implemented
 
+{blank}
 
 The architecture diagram below provides an overview of the complete solution and highlights what infrastructure is provided and which parts need to be implemented as part of this Hackaton.
 
@@ -347,25 +357,215 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 [time=30]
 == API Definition using Apicurio
 
+Apicurito is the Red Hat API Designer tool that provides the abaility to create an *OpenAPI Specification* compatible API definitions.
+The OpenAPI Specification (OAS) defines a standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection. 
+
+When properly defined, a consumer can understand and interact with the remote service with a minimal amount of implementation logic.
+An OpenAPI definition can then be used by documentation generation tools to display the API, code generation tools to generate servers and clients in various programming languages, testing tools, and many other use cases.
+For more information on the *OpenAPI Specification* see the link:{oas3-url}[Open API Specification, window="_blank"] on GitHub
+
+In this section we will use the Red Hat API designer to create an OpenAPI Specification which will then be used to bootstrap the development of our API Server.
+The APIs created should combine data from the provided Lookup Tables - *{postgres-junction-lookup-table}* and *{postgres-meter-lookup-table}* - with the data from the live junction and meter tables which is being injested from AMQ Streams.
+
+=== Database Table Schemas
+
+The schemas for each of the available database table are provided below.
+These should be used as a reference to better understand the underlying data storage layout when desiging the APIs.
+
+*{postgres-meter-lookup-table}*
+
+This table stores the lookup data for parking meters.
+
+----
+  Column   |  Type   
+-----------+---------
+ id        | integer 
+ address   | text    
+ latitude  | real    
+ longitude | real    
+----
+
+*{postgres-junction-lookup-table}*
+
+This table stores the lookup data for junctions.
+
+----
+    Column     |  Type   
+---------------+---------
+ id            | integer 
+ junction_name | text    
+ latitude      | real    
+ longitude     | real    
+----
+
+*{postgres-meter-status-table}*
+
+This table stores the live information on meter status.
+
+----
+   Column    |  Type   
+-------------+---------
+ id          | integer 
+ meter_id    | integer 
+ status_text | text    
+----
+
+*{postgres-junction-status-table}*
+
+This table stores the live information on junction traffic flow.
+
+----
+    Column   |  Type   
+-------------+---------
+ id          | integer 
+ junction_id | integer 
+ count_ns    | integer 
+ count_ew    | integer 
+----
+
+
+=== API Data Types
+You will need to create at least two main API Data Types - *Junction* and *Meter*.
+These Data Types form the basis for the APIs which will be created to act upon the data types.
+For more information on *Data Types* see the link:{oas3-data-types-url}[Open API Spec Data Types Documentation]
+
+. Log in to the link:{apicurito-url}[Red Hat API Designer, window="_blank"] console.
+. Click the *New API* Button
+. Click the *Add a data type* link on the left of the screen under the *Data Types* heading
+. Enter the value of `Meter` in the *Name* field
+. Enter the following vale for *JSON Example*
++
+----
+{
+  "meter_id": "Integer",
+  "last_updated": "Timestamp",
+  "address": "String",
+  "latitude": "Float",
+  "longitude": "Float",
+  "status": "String"
+}
+----
+. Click the *REST Resource* box to create default REST resources for the Meter data type
+. Click *Save*
+
+Repeat the above steps to add a Data Type for *Junction*, providing an appropriate value for the *JSON Example* field.
+
+=== API Paths
+The specifics of the various API paths and their payloads has been left as a design decision for you.
+Some sample API Paths and payloads are provided below as examples.
+You should be guided by, but not feel tied to, these examples.
+
+==== GET /realtime/parking/meters
+Should return information for parking meters.
+Should support an optional `stasus` query parameter to filer the list of meters based on their status. 
+
+```js
+[
+  {
+    "meter_id": Integer,
+    "last_updated": Timestamp,
+    "address": String,
+    "latitude": Float,
+    "longitude": Float,
+
+    // Can be "available", "occupied", "unknown", or "out-of-service"
+    "status": String
+  },
+  {
+    "meter_id": Integer,
+    "last_updated": Timestamp,
+    "address": String,
+    "latitude": Float,
+    "longitude": Float,
+
+    // Can be "available", "occupied", "unknown", or "out-of-service"
+    "status": String
+  },
+  // etc.
+}
+```
+
+### GET /realtime/parking/meters/{meter-id} 
+Should return the latest live information for the given parking `meter-id`.
+
+```js
+{
+  "meter_id": Integer,
+  "last_updated": Timestamp,
+  "address": String,
+  "latitude": Float,
+  "longitude": Float,
+
+  // Can be "available", "occupied", "unknown", or "out-of-service"
+  "status": String
+}
+```
+
+### GET /realtime/traffic/junctions/{junction-id}
+Should return latest conditions for the given junction:
+
+```js
+{
+  "junction_id": Integer,
+  "last_updated": Timestamp,
+  "prev_east_west_count": Integer,
+  "prev_north_south_count": Integer,
+  "24_hr_total_north_south_count": Integer,
+  "24_hr_total_east_west_count": Integer
+}
+```
+
+### GET /realtime/traffic/junctions
+Should return information for all junctions:
+
+```js
+[
+  {
+    "junction_id": Integer,
+    "last_updated": Timestamp,
+    "latitude": Float,
+    "longitude": Float,
+    "count_ns": Integer,
+    "count_ew": Integer
+  },
+  {
+    "junction_id": Integer,
+    "last_updated": Timestamp,
+    "latitude": Float,
+    "longitude": Float,
+    "count_ns": Integer,
+    "count_ew": Integer
+  },
+  // etc.
+]
+```
+
+=== Download the completed OpenAPI Specification
+
+Once you have fully defined the API specification, click *Generate* => *Fuse Camel Project*
+You should also download the specification in either JSON or YAML format for use in the next section, if you wish to implement the API in a technology other than *Fuse Camel*.
+
 
 [time=90]
 == API Implementation
 
 
 
-=== PostgreSQL Details
+=== Connecting to Postgres 
 
-You've been given access to the customer's PostgreSQL database that was
-referenced in the abstract. This contains reference data for all the traffic
-junctions and parking meters in the city.
+You have been given access to a Postgres database that contains lookup and live data for the traffic
+junctions and parking meters.
 
 Use the following details to connect:
 
-. Username: `{user-sanitized-username}`
-. Password: `Password1`
-. Hostname: `postgresql.city-of-losangeles.svc`
-. Database: `city-info`
-. Port: `5432`
+. Username: `{postgres-username}`
+. Password: `{postgres-password}`
+. Hostname: `{postgres-hostname}`
+. Database: `{postgres-database}`
+. Port: `{postgres-port}`
+
+Details of table names and schemas were provided in the previous section - *API Definition using Apicurio*
+
 
 
 [time=30]
