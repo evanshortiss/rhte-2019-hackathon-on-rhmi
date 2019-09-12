@@ -30,7 +30,7 @@ module.exports = async function getConsoleTransport () {
       log(
         'junction status update:',
         JSON.stringify({
-          junctionId, timestamp, ns, ew
+          junctionId, timestamp, counts: { ns, ew }
         })
       )
     }

@@ -67,7 +67,7 @@ function updateJunctions () {
     // Junctions should meet a minimum threshold of 20% of their weight
     // so they appear to be consistently busy if they have a heavy weight
     const min = j.weight * 0.20
-    const junctionId = j.id
+    const junctionId = parseInt(j.id)
     const counts = {
       ew: Math.round(Math.max(min, Math.random() * j.weight)),
       ns: Math.round(Math.max(min, Math.random() * j.weight))
@@ -88,12 +88,12 @@ function updateMeters () {
 
   meterList.forEach(m => {
     const status = getWeightedRandomMeterStatus().text
-    const meterId = m.id
+    const meterId = parseInt(m.id)
 
     // For convenient logging. This is not written in the db
     m.status = status
 
-    log('sending junction update', {
+    log('sending meter update', {
       meterId, timestamp, status
     })
 
