@@ -3,9 +3,9 @@
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
 :fuse-database-connection-name: PostgresDB
-:streams-traffic-topic-name: traffic
+:streams-junction-topic-name: junctions
 :streams-meter-topic-name: meter
-:streams-traffic-data-integration: IoT Traffic Data Ingestion
+:streams-junction-data-integration: IoT Junction Data Ingestion
 :streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
 :postgres-hostname: postgresql.city-of-losangeles.svc
@@ -14,7 +14,7 @@
 :postgres-connection-url: jdbc:postgresql://{postgres-hostname}:{postgres-port}/{postgres-database}
 :postgres-username: {username}
 :postgres-password: Password1
-:postgres-junction-lookup-table: junctionm_info
+:postgres-junction-lookup-table: junction_info
 :postgres-meter-lookup-table: meter_info
 :postgres-junction-status-table: junction_status_{username}
 :postgres-meter-status-table: meter_status_{username}
@@ -42,7 +42,7 @@ In this hackathon you’re tasked with building out a real-time IoT traffic and 
 
 To get you started, you will be provided with the following infrastructure:
 
-* An AMQ Streams instance with 2 topics - `{streams-traffic-topic-name}` and `{streams-meter-topic-name}`. These topics will be connected to a live stream of IoT data which needs to be ingested
+* An AMQ Streams instance with 2 topics - {streams-junction-topic-name} and {streams-meter-topic-name}. These topics will be connected to a live stream of IoT data which needs to be ingested
 * A PostgreSQL server with two databases:
 - A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
 - An empty database, with pre defined schemas for storing the live IoT traffic and sensor data
@@ -108,7 +108,7 @@ image::images/arch.png[integration, role="integr8ly-img-responsive"]
 
 Fuse Online is an enterprise integration platform that provides connectors for many services, such as AMQ Streams and Postgres.
 In this section we will create two connection - one to AMQ Streams and one to Postgres.
-We will then create an integration that uses these two connections and translates incoming data from AMQ streams into database insert statements on Postgres. 
+We will then create an integration that uses these two connections and translates incoming data from AMQ streams into database insert statements on Postgres.
 
 === Creating the AMQ Streams Connector
 
@@ -214,14 +214,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 
 . When prompted to *Choose an Action*, select *Subscribe*.
 
-. When prompted for a *Topic Name*, enter:
-+
-[subs="attributes+"]
-----
-{streams-traffic-topic-name}
-----
-
-. Choose *Queue* as the *Destination Type* and click *Next*.
+. When prompted to select a *Topic Name*, select *{streams-junction-topic-name}*:
 
 . When prompted to *Specify Output Data Type*:
 .. Select *JSON Schema* as the type.
@@ -235,7 +228,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 	"properties": {
 		"junctionId" : { "type": "number" },
 		"timestamp" : { "type": "number" },
-		"counts" : { 
+		"counts" : {
 			"type" : "object",
 			"properties" : {
 				"ns": { "type": "number" },
@@ -245,6 +238,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 	}
 }
 ----
+.. Enter *junction_data* in the *Data Type Name* field.
 .. Click *Next*.
 
 . Choose *{fuse-database-connection-name}* as the *Finish Connection*.
@@ -256,11 +250,11 @@ Verify that you followed each step in the procedure above.  If you are still hav
 +
 [subs="attributes+"]
 ----
-INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, count_ew) 
+INSERT INTO {postgres-junction-status-table} (junction_id, timestamp, count_ns, count_ew)
 VALUES (:#junction_id, to_timestamp(:#timestamp), :#count_ns, :#count_ew);
 ----
 .. Leave *Batch update* set to *No*
-.. Clck *Next*
+.. Click *Next*
 
 . When prompted to *Add to Integration*, click on the blue *+* icon between the *Subscribe* step and the *Invoke SQL* step.
 
@@ -277,7 +271,7 @@ VALUES (:#junction_id, to_timestamp(:#timestamp), :#count_ns, :#count_ew);
 +
 [subs="attributes+"]
 ----
-{streams-traffic-data-integration}
+{streams-junction-data-integration}
 ----
 . Click *Save and publish*.
 
@@ -298,7 +292,7 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 
 === Creating the integration between AMQ Streams and Postgres for parking meter data
 
-. Repeat the steps above for the *{streams-traffic-data-integration}* integration, with the following changes:
+. Repeat the steps above for the *{streams-junction-data-integration}* integration, with the following changes:
 
 .. When prompted for a *Topic Name*, enter:
 +
@@ -324,11 +318,11 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 +
 [subs="attributes+"]
 ----
-INSERT INTO {postgres-meter-status-table} (meter_id, timestamp, status_text) 
-VALUES (:#meter_id, to_timestamp(:#timestamp), :#status_text);
+INSERT INTO {postgres-meter-status-table} (meter_id, status_text, timestamp)
+ VALUES (:#meter_id, :#status_text, to_timestamp(:#timestamp));
 ----
 .. When adding the *Data Mapper* map the 3 fields as follows:
-... statusId => ststus_id
+... meterId => meter_id
 ... timestamp => timestamp
 ... status => status_text
 
@@ -358,7 +352,7 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 == API Definition using Apicurio
 
 Apicurito is the Red Hat API Designer tool that provides the abaility to create an *OpenAPI Specification* compatible API definitions.
-The OpenAPI Specification (OAS) defines a standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection. 
+The OpenAPI Specification (OAS) defines a standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection.
 
 When properly defined, a consumer can understand and interact with the remote service with a minimal amount of implementation logic.
 An OpenAPI definition can then be used by documentation generation tools to display the API, code generation tools to generate servers and clients in various programming languages, testing tools, and many other use cases.
@@ -377,12 +371,12 @@ These should be used as a reference to better understand the underlying data sto
 This table stores the lookup data for parking meters.
 
 ----
-  Column   |  Type   
+  Column   |  Type
 -----------+---------
- id        | integer 
- address   | text    
- latitude  | real    
- longitude | real    
+ id        | integer
+ address   | text
+ latitude  | real
+ longitude | real
 ----
 
 *{postgres-junction-lookup-table}*
@@ -390,12 +384,12 @@ This table stores the lookup data for parking meters.
 This table stores the lookup data for junctions.
 
 ----
-    Column     |  Type   
+    Column     |  Type
 ---------------+---------
- id            | integer 
- junction_name | text    
- latitude      | real    
- longitude     | real    
+ id            | integer
+ junction_name | text
+ latitude      | real
+ longitude     | real
 ----
 
 *{postgres-meter-status-table}*
@@ -403,11 +397,11 @@ This table stores the lookup data for junctions.
 This table stores the live information on meter status.
 
 ----
-   Column    |  Type   
+   Column    |  Type
 -------------+---------
- id          | integer 
- meter_id    | integer 
- status_text | text    
+ id          | integer
+ meter_id    | integer
+ status_text | text
 ----
 
 *{postgres-junction-status-table}*
@@ -415,12 +409,12 @@ This table stores the live information on meter status.
 This table stores the live information on junction traffic flow.
 
 ----
-    Column   |  Type   
+    Column   |  Type
 -------------+---------
- id          | integer 
- junction_id | integer 
- count_ns    | integer 
- count_ew    | integer 
+ id          | integer
+ junction_id | integer
+ count_ns    | integer
+ count_ew    | integer
 ----
 
 
@@ -457,7 +451,7 @@ You should be guided by, but not feel tied to, these examples.
 
 ==== GET /realtime/parking/meters
 Should return information for parking meters.
-Should support an optional `stasus` query parameter to filer the list of meters based on their status. 
+Should support an optional `status` query parameter to filer the list of meters based on their status.
 
 ```js
 [
@@ -485,7 +479,7 @@ Should support an optional `stasus` query parameter to filer the list of meters 
 }
 ```
 
-### GET /realtime/parking/meters/{meter-id} 
+### GET /realtime/parking/meters/{meter-id}
 Should return the latest live information for the given parking `meter-id`.
 
 ```js
@@ -551,7 +545,7 @@ You should also download the specification in either JSON or YAML format for use
 
 
 
-=== Connecting to Postgres 
+=== Connecting to Postgres
 
 You have been given access to a Postgres database that contains lookup and live data for the traffic
 junctions and parking meters.

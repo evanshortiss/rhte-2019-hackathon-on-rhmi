@@ -1,6 +1,7 @@
-# Content (Names are challening...)
+# Lab Setup Scripts
 
-This folder contains scripts that lab administrators must run to setup the lab:
+This folder contains scripts that lab administrators must run to setup the shared
+infrastructure for the lab:
 
 * *db-setup/* - provisions a PostgreSQL for attendees to use
 * *amq-streams-setup* - creates AMQ Streams topics that the generator sends data to

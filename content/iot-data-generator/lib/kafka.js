@@ -29,11 +29,9 @@ module.exports = function getKafkaTransport () {
             status
           })
 
-          producer.send([{ topic: 'meters', messages }], (err, data) => {
+          producer.send([{ topic: 'meters', messages }], (err) => {
             if (err) {
               log('error sending meter update', err)
-            } else {
-              log('send meter update. result is:', data)
             }
           })
         },
@@ -48,15 +46,16 @@ module.exports = function getKafkaTransport () {
         insertJunctionUpdate: async (junctionId, timestamp, ns, ew) => {
           const messages = JSON.stringify({
             junctionId,
-            ns,
-            ew
+            counts: {
+              ns,
+              ew
+            },
+            timestamp
           })
 
-          producer.send([{ topic: 'junctions', messages }], (err, data) => {
+          producer.send([{ topic: 'junctions', messages }], (err) => {
             if (err) {
-              log('error sending meter update', err)
-            } else {
-              log('send meter update. result is:', data)
+              log('error sending junction update', err)
             }
           })
         }
