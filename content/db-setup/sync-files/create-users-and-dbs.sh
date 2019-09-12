@@ -16,7 +16,7 @@ do
 
   echo "Creating junction and meter status tables for $USER_USERNAME"
   psql -d city-info -c "CREATE TABLE $TABLE_JUNCTIONS ( id serial NOT NULL PRIMARY KEY, junction_id serial NOT NULL references junction_info(id), timestamp TIMESTAMP NOT NULL, count_ns int NOT NULL, count_ew int NOT NULL );"
-  psql -d city-info -c "CREATE TABLE $TABLE_METERS ( id serial NOT NULL PRIMARY KEY, meter_id serial NOT NULL references meter_info(id), timestamp TIMESTAMP NOT NULL, status_text varchar(32) NOT NULL );"
+  psql -d city-info -c "CREATE TABLE $TABLE_METERS ( id serial NOT NULL PRIMARY KEY, meter_id serial NOT NULL references meter_info(id), timestamp TIMESTAMP NOT NULL, status_text text NOT NULL );"
 
   echo "Granting ALL table permissions to $USER_USERNAME for status tables"
   psql -d city-info -c "GRANT ALL ON TABLE $TABLE_JUNCTIONS TO $USER_USERNAME;"

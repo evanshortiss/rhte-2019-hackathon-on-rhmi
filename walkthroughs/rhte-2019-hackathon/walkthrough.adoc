@@ -3,9 +3,9 @@
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
 :fuse-database-connection-name: PostgresDB
-:streams-traffic-topic-name: junctions
+:streams-junction-topic-name: junctions
 :streams-meter-topic-name: meter
-:streams-traffic-data-integration: IoT Junction Data Ingestion
+:streams-junction-data-integration: IoT Junction Data Ingestion
 :streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
 :postgres-hostname: postgresql.city-of-losangeles.svc
@@ -14,7 +14,7 @@
 :postgres-connection-url: jdbc:postgresql://{postgres-hostname}:{postgres-port}/{postgres-database}
 :postgres-username: {username}
 :postgres-password: Password1
-:postgres-junction-lookup-table: junctionm_info
+:postgres-junction-lookup-table: junction_info
 :postgres-meter-lookup-table: meter_info
 :postgres-junction-status-table: junction_status_{username}
 :postgres-meter-status-table: meter_status_{username}
@@ -42,7 +42,7 @@ In this hackathon you’re tasked with building out a real-time IoT traffic and 
 
 To get you started, you will be provided with the following infrastructure:
 
-* An AMQ Streams instance with 2 topics - `junctions` and `meters`. These topics will be connected to a live stream of IoT data which needs to be ingested
+* An AMQ Streams instance with 2 topics - {streams-junction-topic-name} and {streams-meter-topic-name}. These topics will be connected to a live stream of IoT data which needs to be ingested
 * A PostgreSQL server with two databases:
 - A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
 - An empty database, with pre defined schemas for storing the live IoT traffic and sensor data
@@ -214,7 +214,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 
 . When prompted to *Choose an Action*, select *Subscribe*.
 
-. When prompted to select a *Topic Name*, select *{streams-traffic-topic-name}*:
+. When prompted to select a *Topic Name*, select *{streams-junction-topic-name}*:
 
 . When prompted to *Specify Output Data Type*:
 .. Select *JSON Schema* as the type.
@@ -271,7 +271,7 @@ VALUES (:#junction_id, to_timestamp(:#timestamp), :#count_ns, :#count_ew);
 +
 [subs="attributes+"]
 ----
-{streams-traffic-data-integration}
+{streams-junction-data-integration}
 ----
 . Click *Save and publish*.
 
@@ -292,7 +292,7 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 
 === Creating the integration between AMQ Streams and Postgres for parking meter data
 
-. Repeat the steps above for the *{streams-traffic-data-integration}* integration, with the following changes:
+. Repeat the steps above for the *{streams-junction-data-integration}* integration, with the following changes:
 
 .. When prompted for a *Topic Name*, enter:
 +
