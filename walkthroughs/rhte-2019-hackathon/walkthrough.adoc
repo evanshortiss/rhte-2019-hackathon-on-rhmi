@@ -451,7 +451,7 @@ You should be guided by, but not feel tied to, these examples.
 
 ==== GET /realtime/parking/meters
 Should return information for parking meters.
-Should support an optional `stasus` query parameter to filer the list of meters based on their status.
+Should support an optional `status` query parameter to filer the list of meters based on their status.
 
 ```js
 [
