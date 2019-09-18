@@ -13,28 +13,37 @@ const metersJsonDataset = require(
   resolve(__dirname, '../../data/losangeles-api-data/meter-sample.raw.json')
 )
 
-const junctions = junctionJsonDataset.features.map((f, id) => {
-  return {
-    id,
-    junction_name: f.attributes.Location,
-    latitude: f.geometry.paths[0][0][1],
-    longitude: f.geometry.paths[0][0][0]
-  }
-})
-const meters = metersJsonDataset.features.map((m, id) => {
-  return {
-    id,
-    address: m.attributes.ADDRESS_SPACE,
-    latitude: m.attributes.GPSY,
-    longitude: m.attributes.GPSX
-  }
-})
+// Remove every other junction to reduce dataset size, then
+// create an array of junction objects with required info
+const junctions = junctionJsonDataset.features
+  .filter((m, idx) => idx % 2)
+  .map((f, id) => {
+    return {
+      id,
+      junction_name: f.attributes.Location,
+      latitude: f.geometry.paths[0][0][1],
+      longitude: f.geometry.paths[0][0][0]
+    }
+  })
+
+// Remove every other meter to reduce dataset size, then
+// create an array of meter objects with required info
+const meters = metersJsonDataset.features
+  .filter((m, idx) => idx % 2)
+  .map((m, id) => {
+    return {
+      id,
+      address: m.attributes.ADDRESS_SPACE,
+      latitude: m.attributes.GPSY,
+      longitude: m.attributes.GPSX
+    }
+  })
 
 writeFileSync(
   resolve(__dirname, 'sync-files/junction_info.json'),
-  JSON.stringify(junctions.slice(0, argv.limit || junctions.length))
+  JSON.stringify(junctions.slice(0, argv.limit))
 )
 writeFileSync(
   resolve(__dirname, 'sync-files/meter_info.json'),
-  JSON.stringify(meters.slice(0, argv.limit || meters.length))
+  JSON.stringify(meters.slice(0, argv.limit))
 )

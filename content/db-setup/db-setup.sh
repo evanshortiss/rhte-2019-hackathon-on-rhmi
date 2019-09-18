@@ -64,6 +64,8 @@ echo "Generating junction_info and meter_info CSV from JSON"
 node generate-csv.js
 npx json2csv -i sync-files/meter_info.json -o sync-files/meter_info.csv
 npx json2csv -i sync-files/junction_info.json -o sync-files/junction_info.csv
+cp sync-files/junction_info.csv ../iot-data-generator/data/junction_info.csv
+cp sync-files/meter_info.csv ../iot-data-generator/data/meter_info.csv
 rm sync-files/*.json
 
 # Get the postgres pod ID
