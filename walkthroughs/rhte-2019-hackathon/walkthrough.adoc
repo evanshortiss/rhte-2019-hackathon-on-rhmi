@@ -868,10 +868,15 @@ new google.maps.visualization.HeatmapLayer({
 })
 ----
 . Ensure all files are saved and restart the *Serve* command.
-. Next, figure out how to implement the Parking Meters map screen.
 
 [type=verification]
 Open your Preview URL from CodeReady Workspaces and navigate to the Traffic Map UI. You should see some heatmap spots near Downtown LA.
 
 [type=verificationFail]
 Open your browser's DevTools, e.g in Chrome use Command+Option+I on macOS, or F12 or Control+Shift+I in Windows and Linux. Check for errors in the JavaScript Console and Network Console. The XHR request to /junctions should be successful and no Google Maps API errors should be listed.
+
+=== Displaying Parking Meters
+
+Use a similar workflow as you did for the heatmap to display markers for
+parking meters. Some hints are provided in the _ParkingMap.tsx_ file to help
+you get started.
