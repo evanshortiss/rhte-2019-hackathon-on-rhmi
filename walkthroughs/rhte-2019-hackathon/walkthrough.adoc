@@ -574,19 +574,20 @@ application to display the latest parking meter and junction traffic
 information. PatternFly is an open source design system created to enable
 consistency and usability across a wide range of applications and use cases.
 
-For the Parking Meters page you'll:
+For the Parking Meters page you will:
 
 . Display a Google Map
 . Render a map marker for each meter
 . Cluster the meters when the map is zoomed out
 . Support filters for each meter state, e.g show only "available" parking meters
 
-{empty} +
 
 For the Traffic Junctions page you will:
 
 . Display a Google Map
 . Use Heatmap functionality from Google Maps to render traffic conditions
+
+{empty} +
 
 The end result will look similar to the images below. Here's an example of the
 Parking Meters being displayed:
@@ -599,7 +600,7 @@ image::images/ui-parking-meters.png[role="integr8ly-img-responsive"]
 
 And here's the traffic heatmap built using the junction data
 
-{empty} +:
+{empty} +
 
 image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 
