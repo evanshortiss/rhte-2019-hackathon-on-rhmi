@@ -453,7 +453,7 @@ You should be guided by, but not feel tied to, these examples.
 Should return information for parking meters.
 Should support an optional `status` query parameter to filer the list of meters based on their status.
 
-----
+```js
 [
   {
     "meter_id": Integer,
@@ -477,7 +477,7 @@ Should support an optional `status` query parameter to filer the list of meters 
   },
   // etc.
 }
-----
+```js
 
 === GET /realtime/parking/meters/{meter-id}
 Should return the latest live information for the given parking `meter-id`.
@@ -498,7 +498,7 @@ Should return the latest live information for the given parking `meter-id`.
 === GET /realtime/traffic/junctions/{junction-id}
 Should return latest conditions for the given junction:
 
-----
+```js
 {
   "junction_id": Integer,
   "last_updated": Timestamp,
@@ -507,12 +507,12 @@ Should return latest conditions for the given junction:
   "24_hr_total_north_south_count": Integer,
   "24_hr_total_east_west_count": Integer
 }
-----
+```
 
 === GET /realtime/traffic/junctions
 Should return information for all junctions:
 
-----
+```js
 [
   {
     "junction_id": Integer,
@@ -532,7 +532,7 @@ Should return information for all junctions:
   },
   // etc.
 ]
-----
+```
 
 === Download the completed OpenAPI Specification
 
