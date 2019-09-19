@@ -482,7 +482,7 @@ Should support an optional `status` query parameter to filer the list of meters 
 === GET /realtime/parking/meters/{meter-id}
 Should return the latest live information for the given parking `meter-id`.
 
-----
+```js
 {
   "meter_id": Integer,
   "last_updated": Timestamp,
@@ -493,7 +493,7 @@ Should return the latest live information for the given parking `meter-id`.
   // Can be "available", "occupied", "unknown", or "out-of-service"
   "status": String
 }
-----
+```
 
 === GET /realtime/traffic/junctions/{junction-id}
 Should return latest conditions for the given junction:
