@@ -572,15 +572,15 @@ Details of table names and schemas were provided in the previous section - *API 
 
 
 In 3scale, we will be dealing with the following constructs:
-. An *API* defines the back end service you wish to protect 
+. An *API* defines the back end service you wish to protect
 . An *Applications* define the credentials (e.g. API Key) to access your API. Applications are stored within *Developer Accounts*.
-. An *Application Plan* determines the access policies and is always associated with one Application. 
- 
+. An *Application Plan* determines the access policies and is always associated with one Application.
+
 In order to secure the traffic and parking meter service that was built in the previous section, we will be performing the following activities in 3scale:
 . Creating a new API
 . Creating an Application Plan
 . Creating an Application
-. Configuring the API 
+. Configuring the API
 
 === API Management Login
 
@@ -647,7 +647,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 ----
 .. Click *Set Custom Key*.
 
-=== Configuring the API 
+=== Configuring the API
 
 . Click *Integration > Configuration* from the side navigation.
 . Clikc the *add the base URL of your API and save the configuration.* button.
@@ -707,7 +707,7 @@ image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 . Click the green *Use this template* button.
 .. Select an *Owner* organisation and enter a *Repository name*.
 .. Click *Create repository from template* button.
-. Open link:{che-url}[CodeReady Workspaces]. The *New Workspace* wizard will be displayed.
+. Open link:{che-url}[CodeReady Workspaces, window="_blank"]. The *New Workspace* wizard will be displayed.
 .. Enter a name such as *RHTE Hackaton Frontend*.
 .. Select *Node10* in the *Select stack* section.
 .. In the *Projects* section click *Add or Import Project*
@@ -741,7 +741,7 @@ cd ${current.project.path} && (which yarn || npm i -g yarn) && yarn && yarn star
 .. In the top menu select *Project > Show/Hide Hidden Files*.
 .. Using the top menu again, select *Project > New > File*.
 .. Name the file _.env_ when prompted.
-.. Open the _.env.example_ file and copy the contents into your new _.env_ file. Ask you administrator for a Google Maps API Key or create a Project on link:https://console.developers.google.com/apis/dashboard[Google APIs] and create your own API Key.
+.. Open the _.env.example_ file and copy the contents into your new _.env_ file. Ask you administrator for a Google Maps API Key or create a Project on link:https://console.developers.google.com/apis/dashboard[Google APIs, window="_blank"] and create your own API Key.
 . Run the development server by clicking the blue *Run* arrow again, but this time choosing the newly listed *Serve* option.
 . Wait yarn to install the application dependencies and build, then click the URL printed with the prefix *preview* in the terminal output.
 
@@ -868,6 +868,7 @@ new google.maps.visualization.HeatmapLayer({
 })
 ----
 . Ensure all files are saved and restart the *Serve* command.
+. Next, figure out how to implement the Parking Meters map screen.
 
 [type=verification]
 Open your Preview URL from CodeReady Workspaces and navigate to the Traffic Map UI. You should see some heatmap spots near Downtown LA.
