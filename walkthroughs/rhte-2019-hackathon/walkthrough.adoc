@@ -22,6 +22,11 @@
 :oas3-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md
 :oas3-data-types-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
 
+:3scale-base-name: {user-sanitized-username}-traffic-service
+:3scale-api-name: {3scale-base-name}-api
+:3scale-plan-name: {3scale-base-name}-plan
+:3scale-app-name: {3scale-base-name}-app
+:3scale-api-key: {3scale-base-name}-key
 
 = RHTE 2019 RHMI Hackathon
 
@@ -565,6 +570,97 @@ Details of table names and schemas were provided in the previous section - *API 
 [time=30]
 == API Protection using 3scale API Management
 
+
+In 3scale, we will be dealing with the following constructs:
+. An *API* defines the back end service you wish to protect 
+. An *Applications* define the credentials (e.g. API Key) to access your API. Applications are stored within *Developer Accounts*.
+. An *Application Plan* determines the access policies and is always associated with one Application. 
+ 
+In order to secure the traffic and parking meter service that was built in the previous section, we will be performing the following activities in 3scale:
+. Creating a new API
+. Creating an Application Plan
+. Creating an Application
+. Configuring the API 
+
+=== API Management Login
+
+. Open the link:{api-management-url}[3scale Login screen, window="_blank"].
+
+. Click the *Red Hat Single Sign On* option. This triggers an OAuth Flow and redirects you back to the {3Scale-ProductName} Dashboard.
+
+. Dismiss the *How does 3Scale work?* option which is displayed the first time you log in to {3Scale-ProductName}. The main Dashboard is displayed.
+
+[type=verification]
+Can you see the {3Scale-ProductName} Dashboard and navigate the main menu?
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
+
+=== Creating a new API
+
+. From the *Dashboard*, select the *New API* item.
+. Select the *Define Manually* option.
+. Enter the following as the *Name* and *System name*:
++
+[subs="attributes+"]
+----
+{3scale-api-name}
+----
+. Leave the *Description* field empty.
+. Click *Add API* at the bottom of the screen.
+
+=== Creating an Application Plan
+. Click *Applications > Application Plans* from the side navigation.
+. Click *Create Application Plan*.
+. Enter the following for *Name* and *System name*:
++
+[subs="attributes+"]
+----
+{3scale-plan-name}
+----
+. Leave the other fields with their default values.
+. Select *Create Application Plan*. You will be redirected to the *Application Plans* screen.
+. Select the *Publish* button, beside your plan list item, to publish the Plan.
+
+=== Creating an Application
+. Select *Audience* from the top navigation bar dropdown.
+. Select the *Developer* Account to open the *Account Summary* page.
+. Select the *(num) Application* item from the breadcrumb at the top of the screen to view Applications.
+. Click the *Create Application* button in the top right.
+. Select the *{3scale-plan-name}* Plan within the *{3scale-api-name}* section in the *Application plan* dropdown.
+. Enter the following for *Name* and *Description*:
++
+[subs="attributes+"]
+----
+{3scale-app-name}
+----
+. Click *Create Application*.
+
+. Set a custom *User Key* for the application:
+.. On the *{3scle-app-name}* application screen you were redirected to, scroll to the *API Credentials* section.
+.. Click the green pencil icon beside the *API User Key*
+.. In the *Set Custom User Key* modal dialog, enter:
++
+[subs="attributes+"]
+----
+{3scale-api-key}
+----
+.. Click *Set Custom Key*.
+
+=== Configuring the API 
+
+. Click *Integration > Configuration* from the side navigation.
+. Clikc the *add the base URL of your API and save the configuration.* button.
+. In the *Private Base URL* field, enter the route name that was created for your application in the *API Implementation* section (i.e. when you were coding your Application):
+. Leave the *Staging Public Base URL* with it's default value.
+. Click *Update & test in Staging Environment* to save your work.
+
+[type=verification]
+Do you get a green line down the left had side of the main body of the window - between *API => API Gateway => Client*?
+Do you also see a message at the bottom of the screen as follows: *onnection between client, gateway & API is working correctly as reflected in the analytics section.*
+
+[type=verificationFail]
+Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
 
 [time=90]
 == Front end visualisation using React.js and Patternfly.js
