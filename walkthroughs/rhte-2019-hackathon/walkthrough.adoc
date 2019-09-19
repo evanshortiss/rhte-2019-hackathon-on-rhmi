@@ -453,7 +453,7 @@ You should be guided by, but not feel tied to, these examples.
 Should return information for parking meters.
 Should support an optional `status` query parameter to filer the list of meters based on their status.
 
-```js
+----
 [
   {
     "meter_id": Integer,
@@ -477,12 +477,12 @@ Should support an optional `status` query parameter to filer the list of meters 
   },
   // etc.
 }
-```
+----
 
-### GET /realtime/parking/meters/{meter-id}
+`GET /realtime/parking/meters/{meter-id}`
 Should return the latest live information for the given parking `meter-id`.
 
-```js
+----
 {
   "meter_id": Integer,
   "last_updated": Timestamp,
@@ -493,12 +493,12 @@ Should return the latest live information for the given parking `meter-id`.
   // Can be "available", "occupied", "unknown", or "out-of-service"
   "status": String
 }
-```
+----
 
-### GET /realtime/traffic/junctions/{junction-id}
+`GET /realtime/traffic/junctions/{junction-id}`
 Should return latest conditions for the given junction:
 
-```js
+----
 {
   "junction_id": Integer,
   "last_updated": Timestamp,
@@ -507,12 +507,12 @@ Should return latest conditions for the given junction:
   "24_hr_total_north_south_count": Integer,
   "24_hr_total_east_west_count": Integer
 }
-```
+----
 
-### GET /realtime/traffic/junctions
+`GET /realtime/traffic/junctions`
 Should return information for all junctions:
 
-```js
+----
 [
   {
     "junction_id": Integer,
@@ -532,7 +532,7 @@ Should return information for all junctions:
   },
   // etc.
 ]
-```
+----
 
 === Download the completed OpenAPI Specification
 
@@ -567,4 +567,186 @@ Details of table names and schemas were provided in the previous section - *API 
 
 
 [time=90]
-== Front end visualisation using React.js and Patternfly.js
+== Front end visualisation using React and Patternfly 4
+
+PatternFly is an open source design system created to enable consistency and
+usability across a wide range of applications and use cases. PatternFly
+provides a React-based implementation of their UI components.
+
+In this section you will use Patternfly's React components to create a web
+application to display the latest parking meter and junction traffic
+information.
+
+For the Parking Meters page you'll:
+
+. Display a Google Map
+. Render a map marker for each meter
+. Cluster the meters when the map is zoomed out
+. Support filters for each meter state, e.g show only "available" parking meters
+
+For the Traffic Junctions page you will:
+
+The end result will look similar to the images below:
+
+. Display a Google Map
+. Use Heatmap functionality from Google Maps to render traffic conditions
+
+image::images/ui-parking-meters.png[role="integr8ly-img-responsive"]
+
+{empty} +
+
+image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
+
+=== Create the UI GitHub Repository & Import to CodeReady Workspaces
+
+. Open the UI template repostory on GitHub at link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi-template-ui[evanshortiss/rhte-2019-hackathon-on-rhmi-template-ui].
+. Click the green *Use this template* button.
+.. Select an *Owner* organisation and enter a *Repository name*.
+.. Click *Create repository from template* button.
+. Open link:{che-url}[CodeReady Workspaces]. The *New Workspace* wizard will be displayed.
+.. Enter a name such as *RHTE Hackaton Frontend*.
+.. Select *Node10* in the *Select stack* section.
+.. In the *Projects* section click *Add or Import Project*
+.. Choose *GitHub*, and authenticate if necessary by clicking the *Connect your github account* button.
+.. Once your accounts and organisations find the repository you created a few moments ago and check the box next to it in the list.
+.. Click the blue *Add* button
+.. Click the green *Create & Open* button to start the Workspace.
+
+[type=verification]
+Is the CodeReady Workspace loaded with a folder containing your code from GitHub on the left?
+
+[type=verificationFail]
+Try running the steps again. Contact your administrator if it continues to fail.
+
+=== Running the Frontend in CodeReady Workspaces
+
+. In the top menu of the CodeReady Workspace UI click the blue *Run* arrow. Click the *newCustom* item that appears.
+. A dialog with numerous input fields will be displayed:
+.. Enter `Serve` in the *Name* field.
+.. In the *Command Line* field enter the following command. This will install `yarn` if it's not found then use it to install your dependencies and start the development server:
++
+[subs="attributes+"]
+----
+cd ${current.project.path} && (which yarn || npm i -g yarn) && yarn && yarn start:dev
+----
+.. Set *Applicable* to *Yes*
+.. Click the *Macros* above the *Preview URL* field and choose the `${server.9000/tcp}` option.
+.. Click *Save* and wait until the *Manage commands* panel on the left lists your *Serve* command.
+. Switch back to the source code tree to setup the Google Maps API Key environment variable:
+.. In the top menu select *Project > Show/Hide Hidden Files*.
+.. Using the top menu again select *Project > New > File*.
+.. Name the file _.env_ when prompted.
+.. Open the _.env.example_ file and copy the contents into your new _.env_ file. Ask you administrator for a Google Maps API Key or create a Project on link:https://console.developers.google.com/apis/dashboard[Google APIs] and create your own API Key.
+. Run the development server by clicking the blue *Run* arrow again, but this time choosing the newly listed *Serve* option.
+. Wait yarn to install the application dependencies and build, then click the URL printed with the prefix *preview* in the terminal output.
+
+=== Displaying a Traffic Heatmap
+
+. Create a _junctions.json_ file inside the _mock-api-server/api-data_ directory.
+. Paste the following content into the _junctions.json_:
++
+[subs="attributes+"]
+----
+[
+  {
+    "junction_id": 2468,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "ALAMEDA  ST AT 6th ST",
+    "latitude": 34.0391,
+    "longitude": -118.238,
+    "count_ns": 28,
+    "count_ew": 27
+  },
+  {
+    "junction_id": 341,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "RAMPART BL AT 3RD ST",
+    "latitude": 34.0663,
+    "longitude": -118.279,
+    "count_ns": 17,
+    "count_ew": 27
+  },
+  {
+    "junction_id": 3022,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "OLIVE ST S/O 6TH ST",
+    "latitude": 34.048,
+    "longitude": -118.254,
+    "count_ns": 37,
+    "count_ew": 12
+  },
+  {
+    "junction_id": 2469,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "OLIVE  ST  AT  4TH  ST",
+    "latitude": 34.0516,
+    "longitude": -118.251,
+    "count_ns": 25,
+    "count_ew": 17
+  },
+  {
+    "junction_id": 3183,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "MATEO  ST  AT  6TH  ST",
+    "latitude": 34.0384,
+    "longitude": -118.233,
+    "count_ns": 24,
+    "count_ew": 53
+  },
+  {
+    "junction_id": 2479,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "GRAND VIEW ST N/O 6th ST",
+    "latitude": 34.0628,
+    "longitude": -118.275,
+    "count_ns": 60,
+    "count_ew": 63
+  },
+  {
+    "junction_id": 1,
+    "last_updated": "2019-09-12T20:03:44",
+    "junction_name": "CRENSHAW BL AT 36th ST",
+    "latitude": 34.0256,
+    "longitude": -118.335,
+    "count_ns": 40,
+    "count_ew": 27
+  }
+]
+----
++
+[NOTE]
+====
+* If you already have an API available you can fill this file with a response from that.
+* This is an incredibly small dataset and will only render a small few spots near Downtown LA.
+====
+. Open the _TrafficMap.tsx_ file.
+. Import the Junction Object type using this code:
++
+[subs="attributes+"]
+----
+import { JunctionObject } from '@app/ApiInterfaces/api-interfaces';
+----
+. Modify the `JunctionObject` type in _ApiInterfaces/api-interfaces.ts_ to match structure of your API response if necessary.
+. Add the following code inside the `handleApiLoaded` function in _TrafficMap.tsx_:
++
+[subs="attributes+"]
+----js
+// Uses an internal dev server
+const DEV_API_URL = 'http://localhost:9000/junctions'
+// Replace with your 3scale API url
+const LIVE_API_URL = 'YOUR_LIVE_API_URL'
+
+const request = await fetch(DEV_API_URL)
+const junctions: JunctionObject[] = await request.json()
+
+new google.maps.visualization.HeatmapLayer({
+  data: junctions.map(j => {
+    return {
+      location: new google.maps.LatLng(j.latitude, j.longitude),
+      weight: j.count_ns + j.count_ew
+    }
+  }),
+  map: map,
+  radius: 10
+})
+----
