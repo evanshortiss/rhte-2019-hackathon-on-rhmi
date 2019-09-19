@@ -479,7 +479,7 @@ Should support an optional `status` query parameter to filer the list of meters 
 }
 ----
 
-`GET /realtime/parking/meters/{meter-id}`
+=== GET /realtime/parking/meters/{meter-id}
 Should return the latest live information for the given parking `meter-id`.
 
 ----
@@ -495,7 +495,7 @@ Should return the latest live information for the given parking `meter-id`.
 }
 ----
 
-`GET /realtime/traffic/junctions/{junction-id}`
+=== GET /realtime/traffic/junctions/{junction-id}
 Should return latest conditions for the given junction:
 
 ----
@@ -509,7 +509,7 @@ Should return latest conditions for the given junction:
 }
 ----
 
-`GET /realtime/traffic/junctions`
+=== GET /realtime/traffic/junctions
 Should return information for all junctions:
 
 ----
@@ -569,13 +569,10 @@ Details of table names and schemas were provided in the previous section - *API 
 [time=90]
 == Front end visualisation using React and Patternfly 4
 
-PatternFly is an open source design system created to enable consistency and
-usability across a wide range of applications and use cases. PatternFly
-provides a React-based implementation of their UI components.
-
 In this section you will use Patternfly's React components to create a web
 application to display the latest parking meter and junction traffic
-information.
+information. PatternFly is an open source design system created to enable
+consistency and usability across a wide range of applications and use cases.
 
 For the Parking Meters page you'll:
 
@@ -584,20 +581,29 @@ For the Parking Meters page you'll:
 . Cluster the meters when the map is zoomed out
 . Support filters for each meter state, e.g show only "available" parking meters
 
-For the Traffic Junctions page you will:
+{empty} +
 
-The end result will look similar to the images below:
+For the Traffic Junctions page you will:
 
 . Display a Google Map
 . Use Heatmap functionality from Google Maps to render traffic conditions
+
+The end result will look similar to the images below. Here's an example of the
+Parking Meters being displayed:
+
+{empty} +
 
 image::images/ui-parking-meters.png[role="integr8ly-img-responsive"]
 
 {empty} +
 
+And here's the traffic heatmap built using the junction data
+
+{empty} +:
+
 image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 
-=== Create the UI GitHub Repository & Import to CodeReady Workspaces
+=== Create the UI GitHub Repository & Import it into CodeReady Workspaces
 
 . Open the UI template repostory on GitHub at link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi-template-ui[evanshortiss/rhte-2019-hackathon-on-rhmi-template-ui].
 . Click the green *Use this template* button.
@@ -611,6 +617,7 @@ image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 .. Once your accounts and organisations find the repository you created a few moments ago and check the box next to it in the list.
 .. Click the blue *Add* button
 .. Click the green *Create & Open* button to start the Workspace.
+. After a minute or two you should be able to see the workspace UI.
 
 [type=verification]
 Is the CodeReady Workspace loaded with a folder containing your code from GitHub on the left?
@@ -620,8 +627,8 @@ Try running the steps again. Contact your administrator if it continues to fail.
 
 === Running the Frontend in CodeReady Workspaces
 
-. In the top menu of the CodeReady Workspace UI click the blue *Run* arrow. Click the *newCustom* item that appears.
-. A dialog with numerous input fields will be displayed:
+. In the top menu of the CodeReady Workspace UI click the blue *Run* arrow, then click the *newCustom* item that appears in a dropdown.
+. The create command dialog and input fields will be displayed:
 .. Enter `Serve` in the *Name* field.
 .. In the *Command Line* field enter the following command. This will install `yarn` if it's not found then use it to install your dependencies and start the development server:
 +
@@ -634,16 +641,24 @@ cd ${current.project.path} && (which yarn || npm i -g yarn) && yarn && yarn star
 .. Click *Save* and wait until the *Manage commands* panel on the left lists your *Serve* command.
 . Switch back to the source code tree to setup the Google Maps API Key environment variable:
 .. In the top menu select *Project > Show/Hide Hidden Files*.
-.. Using the top menu again select *Project > New > File*.
+.. Using the top menu again, select *Project > New > File*.
 .. Name the file _.env_ when prompted.
 .. Open the _.env.example_ file and copy the contents into your new _.env_ file. Ask you administrator for a Google Maps API Key or create a Project on link:https://console.developers.google.com/apis/dashboard[Google APIs] and create your own API Key.
 . Run the development server by clicking the blue *Run* arrow again, but this time choosing the newly listed *Serve* option.
 . Wait yarn to install the application dependencies and build, then click the URL printed with the prefix *preview* in the terminal output.
 
+
+[type=verification]
+Open your Preview URL from CodeReady Workspaces. You should see a UI with links for Traffic and Parking Maps.
+
+[type=verificationFail]
+Verify no errors are being printed by the Serve command and that your followed each step above correctly. If no map is displayed, but the links are then you need to verify your Google Maps API Key.
+
+
 === Displaying a Traffic Heatmap
 
 . Create a _junctions.json_ file inside the _mock-api-server/api-data_ directory.
-. Paste the following content into the _junctions.json_:
+. Paste the following content into the _junctions.json_ file that you created:
 +
 [subs="attributes+"]
 ----
@@ -719,22 +734,26 @@ cd ${current.project.path} && (which yarn || npm i -g yarn) && yarn && yarn star
 * If you already have an API available you can fill this file with a response from that.
 * This is an incredibly small dataset and will only render a small few spots near Downtown LA.
 ====
-. Open the _TrafficMap.tsx_ file.
-. Import the Junction Object type using this code:
+. Open the _TrafficMap.tsx_ file inside the _src/app_ directory.
+. Import the Junction Object type using this code in _TrafficMap.tsx_:
 +
 [subs="attributes+"]
 ----
 import { JunctionObject } from '@app/ApiInterfaces/api-interfaces';
 ----
-. Modify the `JunctionObject` type in _ApiInterfaces/api-interfaces.ts_ to match structure of your API response if necessary.
++
+[NOTE]
+====
+* Modify the `JunctionObject` type in _ApiInterfaces/api-interfaces.ts_ to match structure of your API response if necessary.
+====
 . Add the following code inside the `handleApiLoaded` function in _TrafficMap.tsx_:
 +
 [subs="attributes+"]
-----js
-// Uses an internal dev server
-const DEV_API_URL = 'http://localhost:9000/junctions'
+----
+// Replace with your CodeReady preview URL. Uses the mock api server
+const DEV_API_URL = 'https://CODE_READY_PREVIEW_URL/junctions'
 // Replace with your 3scale API url
-const LIVE_API_URL = 'YOUR_LIVE_API_URL'
+const LIVE_API_URL = 'https://YOUR_LIVE_API_URL/junctions'
 
 const request = await fetch(DEV_API_URL)
 const junctions: JunctionObject[] = await request.json()
@@ -750,3 +769,9 @@ new google.maps.visualization.HeatmapLayer({
   radius: 10
 })
 ----
+
+[type=verification]
+Open your Preview URL from CodeReady Workspaces and navigate to the Traffic Map UI. You should see some heatmap spots near Downtown LA.
+
+[type=verificationFail]
+Open your browser's DevTools, e.g in Chrome use Command+Option+I on macOS, or F12 or Control+Shift+I in Windows and Linux. Check for errors in the JavaScript Console and Network Console. The XHR request to /junctions should be successful and no Google Maps API errors should be listed.
