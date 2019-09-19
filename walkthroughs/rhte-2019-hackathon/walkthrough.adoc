@@ -771,6 +771,7 @@ new google.maps.visualization.HeatmapLayer({
   radius: 10
 })
 ----
+. Ensure all files are saved and restart the *Serve* command.
 
 [type=verification]
 Open your Preview URL from CodeReady Workspaces and navigate to the Traffic Map UI. You should see some heatmap spots near Downtown LA.
