@@ -3,7 +3,10 @@
 This repository contains a Solution Pattern that's compatible with the
 [Integreatly Solution Explorer](https://github.com/integr8ly/tutorial-web-app).
 
-## Development Setup
+## Lab Setup
+Refer to [content/README](content/README.md)
+
+## Development Setup for Walkthrough Content
 
 Setup requires installation of Node.js 10.15 or later. This enables a Git hook
 that verifies the asciidoc content and walkthrough config.
@@ -16,7 +19,7 @@ cd rhte-2019-hackathon-on-rhmi
 npm install
 ```
 
-## Run Locally
+## View Walkthrough Content Locally
 
 When running the Solution Explorer (webapp) locally you lose certain features,
 such as the injection of variables into asciidoc. Use local development to
@@ -38,7 +41,7 @@ yarn install
 yarn start:dev
 ```
 
-## Deployment to an RHMI Cluster
+## View Walkthrough Content on an RHMI Cluster
 
 ### Via OpenShift UI
 1. Sign in as `admin` to the cluster.
@@ -56,7 +59,3 @@ WALKTHROUGH_LOCATIONS: 'https://github.com/integr8ly/tutorial-web-app-walkthroug
 ### Via OpenShift CLI
 1. Login as `admin` using `oc login -u admin`
 1. Run `oc patch webapp tutorial-web-app-operator -n webapp --type=merge -p '{"spec":{"template":{"parameters":{"WALKTHROUGH_LOCATIONS":"https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi"}}}}'`
-
-### PostgreSQL Setup
-Run the `db-setup.sh` script in the *content/* folder to setup a namespace and
-database that attendees will need to use to complete the lab.
