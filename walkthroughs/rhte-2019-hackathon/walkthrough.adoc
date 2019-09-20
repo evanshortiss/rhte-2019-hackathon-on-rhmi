@@ -624,6 +624,8 @@ const connectionString = env
   .asUrlString();
 ----
 
+{empty} +
+
 You're now ready to deploy this application on OpenShift. If you'd like to
 setup a PostgreSQL database locally to test your changes the data and setup
 script at this link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi/tree/master/content/db-setup/sync-files[link, window="_blank"] will be useful.
