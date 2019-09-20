@@ -578,7 +578,7 @@ for development since it includes a Node.js 10 stack.
 . Run the development server by issuing the `npm run start-dev` command.
 
 [type=verification]
-The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file.
+The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file. Do you see these outputs?
 
 [type=verificationFail]
 Verify that the dependencies were installed successfully and that your `openapi-spec.json` is in the root of the project folder. Contact your administrator if it continues to fail.
@@ -636,7 +636,7 @@ To deploy your code on the RHMI Cluster, follow the steps below:
 . Wait until the Nodeshift process completes.
 
 [type=verification]
-Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. A single Pod should be running and a route should also be available. Accessing the route should direct your the OpenAPI Spec docs for your API.
+Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. A single Pod should be running and a route should also be available. Accessing the route should direct your the OpenAPI Spec docs for your API. Is the route available, and are OpenAPI Docs rendered?
 
 [type=verificationFail]
 Verify no errors were encountered during the Nodeshift deployment process. Check the Node.js Pod logs for errors. Contact your administrator if errors persist.
