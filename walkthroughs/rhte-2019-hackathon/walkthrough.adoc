@@ -544,12 +544,6 @@ Should return information for all junctions:
 Once you have fully defined the API specification, click *Generate* => *Fuse Camel Project*
 You should also download the specification in either JSON or YAML format for use in the next section, if you wish to implement the API in a technology other than *Fuse Camel*.
 
-
-[time=90]
-== API Implementation
-
-
-
 === Connecting to Postgres
 
 You have been given access to a Postgres database that contains lookup and live data for the traffic
@@ -565,7 +559,86 @@ Use the following details to connect:
 
 Details of table names and schemas were provided in the previous section - *API Definition using Apicurio*
 
+[time=90]
+== API Implementation using Node.js
 
+You can follow this section to start building the Traffic and Parking Meters
+API using Node.js. You will need Node.js 10 or later installed locally, or
+alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"]
+for development since it includes a Node.js 10 stack.
+
+=== Fork & Setup the Template
+
+. Create a GitHub account at link:https://github.com/join[github.com/join] if you don't already have one.
+. Sign into your GitHub account.
+. Open the link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template[Node.js Template] and click the *Fork* button.
+. Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template`.
+. Install the dependencies by running `npm install` in the cloned directory.
+. Copy a JSON format version of your OpenAPI Spec into the folder and rename it `openapi-spec.json`.
+. Run development server by issuing the `npm run start-dev` command.
+
+[type=verification]
+The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080] should render API Docs from your OpenAPI Spec JSON file.
+
+[type=verificationFail]
+Verify that the dependencies were installed successfully and that your `openapi-spec.json` is in the root of the project folder. Contact your administrator if it continues to fail.
+
+=== Implement an API Endpoint and Deploy on OpenShift
+
+.. Open the _src/routes/junctions.ts_ file.
+.. Add the following import statement: `import { query } from '../db';`
+.. Add the following `type` definition and update the route code as shown. This will return all junctions, and also provide intellisense for the returned database rows thanks to the `JunctionObject` definition.
++
+[subs="attributes+"]
+----
+type JunctionObject = {
+  junction_id: number
+  count_ns: number
+  count_ew: number
+  last_updated: string
+  longitude: number
+  latitude: number
+};
+
+junctionsRoute.get('/', async (req, res) =>
+  const result = await query<JunctionObject>('SELECT * FROM junction_info;')
+
+  res.json(result.rows)
+})
+----
++
+[NOTE]
+====
+* This SQL query simply returns all Junctions without their latest status.
+* Use this as a template to build out your API endpoints and SQL queries.
+====
+.. Open the _src/db.ts_ file and add a default value for the `PG_CONNECTION_STRING` environment variable:
++
+[subs="attributes+"]
+----
+const connectionString = env
+  .get(
+    'PG_CONNECTION_STRING',
+    'postgresql://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
+  )
+  .asUrlString();
+----
+.. If you'd like to setup a PostgreSQL database locally to test your changes the data and setup script at this link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi/tree/master/content/db-setup/sync-files[link] will be useful.
+. You're now ready to deploy this application on OpenShift.
+.. Run `oc login {openshift-host}`, and enter your username and password when prompted.
+.. Run `oc project {walkthrough-namespace}` to switch the `oc` context to your hackathon project/namespace.
+.. Run `npm run nodeshift` to deploy your Node.js application.
+.. Wait until the Nodeshift process completes.
+
+[type=verification]
+Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. A single Pod should be running and a route should also be available. Accessing the route should direct your the OpenAPI Spec docs for your API.
+
+[type=verificationFail]
+Verify no errors were encountered during the Nodeshift deployment process. Check the Node.js Pod logs for errors. Contact your administrator if errors persist.
+
+=== Complete the API Implementation
+
+You now have a workflow for deploying your Node.js-based API server to the RHMI Cluster. Use this to develop the API endpoints defined in your OpenAPI Spec.
 
 [time=30]
 == API Protection using 3scale API Management
