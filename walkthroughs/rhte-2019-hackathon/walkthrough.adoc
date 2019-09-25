@@ -609,8 +609,9 @@ junctionsRoute.get('/', async (req, res) =>
 +
 [NOTE]
 ====
-* This SQL query simply returns all Junctions without their latest status.
-* Use this as a template to build out your API endpoints and SQL queries.
+* This SQL query simply returns all Junctions without their latest status, i.e the *last_updated*, *count_ns*, and *count_ew* fields are missing.
+* The JunctionObject defined above represents what your final SQL query should return for the */junctions* endpoint. Hint: you'll need an *INNER JOIN* and perhaps a subquery too.
+* Use this as a template to build out the rest of your API endpoints and SQL queries.
 ====
 . Open the _src/db.ts_ file and add a default value for the `PG_CONNECTION_STRING` environment variable:
 +

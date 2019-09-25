@@ -24,13 +24,6 @@ then
   exit 1
 fi
 
-OC_USER=$(oc whoami)
-if [ $OC_USER != "admin" ]
-then
-  echo "please run \"oc login -u admin\" on the RHMI cluster before using this script"
-  exit 1
-fi
-
 echo "Installing npm dependencies"
 npm install
 
