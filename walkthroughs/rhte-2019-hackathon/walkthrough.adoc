@@ -558,12 +558,22 @@ Details of table names and schemas were provided in the previous section - *API 
 
 === Camel + Spring Boot
 
+You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot=. 
+
+. Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
+. Sign into your GitHub account.
+. Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
+. Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-fuse-camel-project`.
+. Build, run and test using your standard Java development flow.
+
+The remainder of the implemetation in Spring Boot is left as a task for you.
+
+If you would like a more guided development experience, consider using the Node.js flow below.
+
 === Node.js
 
-You can follow this section to start building the Traffic and Parking Meters
-API using Node.js. You will need Node.js 10 or later installed locally, or
-alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"]
-for development since it includes a Node.js 10 stack.
+You can follow this section to start building the Traffic and Parking Meters API using Node.js. 
+You will need Node.js 10 or later installed locally, or alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"] for development since it includes a Node.js 10 stack.
 
 ==== Fork & Setup the Template
 
