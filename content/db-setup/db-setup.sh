@@ -75,4 +75,12 @@ oc exec $POSTGRES_POD -- bash -c 'psql -U postgres -f /var/lib/pgsql/data/setup-
 echo "Run create-users.sh"
 oc exec $POSTGRES_POD -- bash -c 'sh /var/lib/pgsql/data/setup-files/create-users-and-dbs.sh'
 
+oc create -f ./port-forward-role.yaml
+
+for NUM in {1..50}
+do
+  USER_USERNAME=$(printf "evals%02d\n" $NUM)
+  oc adm policy add-cluster-role-to-user allow-port-forward $USER_USERNAME -n city-of-losangeles
+done
+
 echo "\nFinished!\n"
