@@ -6,11 +6,17 @@ const weightedRandom = require('weighted-random')
 const { resolve } = require('path')
 const getTransport = require('./lib/transport')
 
+const SEND_INTERVAL_MS = 10 * 1000
+const SEND_COUNT_MIN = 50
+const SEND_COUNT_MAX = 100
+
 // These will be assigned JSON by "main" and "getTransport"
 let junctionList
 let meterList
 let transport
 
+// These are the states that a meter can be in. They also have a weight
+// assigned that's used to create a distribution of states
 const meterStates = [
   {
     weight: 0.5,
@@ -30,9 +36,12 @@ const meterStates = [
   }
 ]
 
-main()
+;(async function main () {
+  log('starting data generator')
 
-async function main () {
+  let meterIdx = 0
+  let junctionIdx = 0
+
   junctionList = await csv().fromFile(
     resolve(__dirname, './data/junction_info.csv')
   )
@@ -43,74 +52,88 @@ async function main () {
 
   // Assign random weights to junctions on startup
   assignJunctionWeights()
-  // Set initial meter and junction states
-  performUpdates()
 
-  // Simulate flushing sensors every two minutes
-  // TODO - consider size of data being generated
-  setInterval(performUpdates, 90 * 1000)
-}
+  // Update a batch of junctions every SEND_INTERVAL_MS
+  setInterval(() => {
+    const batchSize = getRandomInt(SEND_COUNT_MIN, SEND_COUNT_MAX)
+    const junctions = junctionList.slice(junctionIdx, junctionIdx + batchSize)
+    junctionIdx += batchSize
 
-function performUpdates () {
-  const start = Date.now()
+    log(`updating ${batchSize} junctions in this run`)
 
-  updateJunctions()
-  updateMeters()
-
-  log(`Meter and junction updates generated in ${Date.now() - start}ms`)
-}
-
-function updateJunctions () {
-  const timestamp = getTimestamp()
-
-  junctionList.forEach((j) => {
-    // Junctions should meet a minimum threshold of 20% of their weight
-    // so they appear to be consistently busy if they have a heavy weight
-    const min = j.weight * 0.20
-    const junctionId = parseInt(j.id)
-    const counts = {
-      ew: Math.round(Math.max(min, Math.random() * j.weight)),
-      ns: Math.round(Math.max(min, Math.random() * j.weight))
+    if (junctionIdx >= junctionList.length) {
+      junctionIdx = 0
     }
 
-    log('sending junction update', {
-      junctionId, timestamp, counts
+    junctions.forEach((j) => {
+      const state = generateStateForJunction(j)
+
+      log('sending junction update', state)
+
+      transport.insertJunctionUpdate(
+        state.junctionId, state.timestamp, state.counts.ew, state.counts.ns
+      )
     })
-    transport.insertJunctionUpdate(junctionId, timestamp, counts.ew, counts.ns)
-  })
+  }, SEND_INTERVAL_MS)
+
+  // Update a batch of meters every SEND_INTERVAL_MS
+  setInterval(() => {
+    const batchSize = getRandomInt(SEND_COUNT_MIN, SEND_COUNT_MAX)
+    const meters = meterList.slice(meterIdx, meterIdx + batchSize)
+    meterIdx += batchSize
+
+    log(`updating ${batchSize} meters in this run`)
+
+    if (meterIdx >= meterList.length) {
+      meterIdx = 0
+    }
+
+    meters.forEach(m => {
+      const { timestamp, status, meterId } = generateStateForMeter(m)
+
+      // For convenient logging. This is not written in the db
+      m.status = status
+
+      log('sending meter update', {
+        meterId, timestamp, status
+      })
+
+      transport.insertMeterUpdate(meterId, timestamp, status)
+    })
+  }, SEND_INTERVAL_MS)
+})()
+
+/**
+ * Generate a state update for the given junction
+ * @param {Object} j
+ */
+function generateStateForJunction (j) {
+  const min = j.weight * 0.20
+  const timestamp = getTimestamp()
+  const junctionId = parseInt(j.id)
+  const counts = {
+    ew: Math.round(Math.max(min, Math.random() * j.weight)),
+    ns: Math.round(Math.max(min, Math.random() * j.weight))
+  }
+
+  return {
+    junctionId, timestamp, counts
+  }
 }
 
 /**
- * Update meters per our planned paramaters
+ * Generate a state update for the given meter
+ * @param {Object} m
  */
-function updateMeters () {
+function generateStateForMeter (m) {
   const timestamp = getTimestamp()
+  const status = getWeightedRandomMeterStatus().text
+  const meterId = parseInt(m.id)
 
-  meterList.forEach(m => {
-    const status = getWeightedRandomMeterStatus().text
-    const meterId = parseInt(m.id)
+  // A side-effect, yuck!
+  m.status = status
 
-    // For convenient logging. This is not written in the db
-    m.status = status
-
-    log('sending meter update', {
-      meterId, timestamp, status
-    })
-
-    transport.insertMeterUpdate(meterId, timestamp, status)
-  })
-
-  const counts = meterList.reduce((memo, cur) => {
-    if (memo[cur.status]) {
-      memo[cur.status]++
-    } else {
-      memo[cur.status] = 1
-    }
-
-    return memo
-  }, {})
-
-  log('Meter Status Summary:\n', JSON.stringify(counts, null, 2))
+  return { timestamp, status, meterId }
 }
 
 function getWeightedRandomMeterStatus () {
@@ -155,6 +178,9 @@ function getRandomInt (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+/**
+ * Returns seconds since epoch timestamps
+ */
 function getTimestamp () {
   return Math.round(Date.now() / 1000)
 }
