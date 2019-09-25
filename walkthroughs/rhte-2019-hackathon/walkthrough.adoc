@@ -428,7 +428,7 @@ You will need to create at least two main API Data Types - *Junction* and *Meter
 These Data Types form the basis for the APIs which will be created to act upon the data types.
 For more information on *Data Types* see the link:{oas3-data-types-url}[Open API Spec Data Types Documentation]
 
-. Log in to the link:{apicurito-url}[Red Hat API Designer, window="_blank"] console.
+. Log in to the link:{apicurio-url}[Red Hat API Designer, window="_blank"] console.
 . Click the *New API* Button
 . Click the *Add a data type* link on the left of the screen under the *Data Types* heading
 . Enter the value of `Meter` in the *Name* field
