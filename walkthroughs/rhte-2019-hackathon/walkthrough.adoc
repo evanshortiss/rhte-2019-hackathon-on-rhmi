@@ -35,7 +35,8 @@ Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon!
 Red Hat Managed Integration (RHMI) delivers cloud-based agile integration services hosted on OpenShift Dedicated (OSD). Using RHMI we can create consistent, immediately available, managed environments so that development teams can more easily build enterprise applications on OpenShift.
 These environments accelerate engagement timelines, reduce operational risk and cost, and address the needs of the evolving enterprise integration market.
 
-In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles. Attendees will form teams of 4 people and will self organise to complete the following tasks:
+In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles. 
+Attendees may tackle this hackathon alone or pair up with a colleague in teams of 2 to complete the following tasks:
 
 * Data ingestion of real time traffic and parking meter data from AMQ Streams into a Postgres Database using Red Hat Fuse Online
 * Definition of an OpenAPI compatible API Spec using Apicurio
@@ -51,14 +52,14 @@ To get you started, you will be provided with the following infrastructure:
 * A PostgreSQL server with two databases:
 - A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
 - An empty database, with pre defined schemas for storing the live IoT traffic and sensor data
-* Access to the Apicurio API designer tool for creating the OPenAPI Spec compatible API definition
+* Access to the Apicurio API designer tool for creating the OpenAPI Spec compatible API definition
 * Outline reference implementations of the API Server in Fuse, Spring Boot, Vert.x and Node.js which will have a single API definition implemented and connectivity to Postgres pre-configured
 * Access to 3scale API Management service for protecting your API
 * Outline reference implementations of the front end web app with a single API call implemented
 
 {blank}
 
-The architecture diagram below provides an overview of the complete solution and highlights what infrastructure is provided and which parts need to be implemented as part of this Hackaton.
+The architecture diagram below provides an overview of the complete solution.
 
 image::images/arch.png[integration, role="integr8ly-img-responsive"]
 
@@ -71,26 +72,26 @@ image::images/arch.png[integration, role="integr8ly-img-responsive"]
 * link:https://blog.openshift.com/[Openshift Blog, window="_blank"]
 ****
 
+[type=walkthroughResource,serviceName=fuse]
+.Fuse Online
+****
+* link:{fuse-url}[Console, window="_blank", id="resources-fuse-url"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html/integrating_applications_with_fuse_online/index[Documentation, window="_blank"]
+* link:https://www.redhat.com/en/technologies/jboss-middleware/fuse-online[Overview, window="_blank"]
+****
+
 [type=walkthroughResource,serviceName=apicurio]
 .Apicurito
 ****
 * link:{apicurio-url}[Console, window="_blank", id="resources-apicurio-url"]
 ****
 
-[type=walkthroughResource,serviceName=fuse]
-.Fuse Online
+[type=walkthroughResource,serviceName=3scale]
+.3Scale
 ****
-* link:{fuse-url}[Console, window="_blank", id="resources-fuse-url"]
-* link:https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html/integrating_applications_with_fuse_online/index[Documentation, window="_blank"]
-* link:https://www.redhat.com/en/technologies/jboss-middleware/fuse-online[Overview, window="_blank"]
-****
-
-[type=walkthroughResource,serviceName=amq-online-standard]
-.AMQ Online
-****
-* link:{enmasse-url}[Console, window="_blank", id="resources-enmasse-url"]
-* link:https://access.redhat.com/documentation/en-us/red_hat_amq/7.4/html/using_amq_online_on_openshift_container_platform/index[Documentation, window="_blank"]
-* link:https://www.redhat.com/en/technologies/jboss-middleware/amq[Overview, window="_blank"]
+* link:https://{user-username}-admin.{openshift-app-host}[Console, window="_blank"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/2.6/[Documentation, window="_blank"]
+* link:https://www.redhat.com/en/technologies/jboss-middleware/3scale[Overview, window="_blank"]
 ****
 
 [type=walkthroughResource,serviceName=codeready]
@@ -98,14 +99,7 @@ image::images/arch.png[integration, role="integr8ly-img-responsive"]
 ****
 * link:{che-url}[Console, window="_blank"]
 * link:https://developers.redhat.com/products/codeready-workspaces/overview/[Overview, window="_blank"]
-* link:https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces_for_openshift/1.0.0/[Documentation, window="_blank"]
-****
-[type=walkthroughResource,serviceName=3scale]
-.3Scale
-****
-* link:https://{user-username}-admin.{openshift-app-host}[Console, window="_blank"]
-* link:https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/2.5/[Documentation, window="_blank"]
-* link:https://www.redhat.com/en/technologies/jboss-middleware/3scale[Overview, window="_blank"]
+* link:https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces/1.2/[Documentation, window="_blank"]
 ****
 
 [time=30]
@@ -428,7 +422,7 @@ You will need to create at least two main API Data Types - *Junction* and *Meter
 These Data Types form the basis for the APIs which will be created to act upon the data types.
 For more information on *Data Types* see the link:{oas3-data-types-url}[Open API Spec Data Types Documentation]
 
-. Log in to the link:{apicurito-url}[Red Hat API Designer, window="_blank"] console.
+. Log in to the link:{apicurio-url}[Red Hat API Designer, window="_blank"] console.
 . Click the *New API* Button
 . Click the *Add a data type* link on the left of the screen under the *Data Types* heading
 . Enter the value of `Meter` in the *Name* field
@@ -559,15 +553,19 @@ Use the following details to connect:
 
 Details of table names and schemas were provided in the previous section - *API Definition using Apicurio*
 
-[time=60]
-== API Implementation using Node.js
+[time=90]
+== API Implementation using Camel + Spring Boot or Node.js
+
+=== Camel + Spring Boot
+
+=== Node.js
 
 You can follow this section to start building the Traffic and Parking Meters
 API using Node.js. You will need Node.js 10 or later installed locally, or
 alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"]
 for development since it includes a Node.js 10 stack.
 
-=== Fork & Setup the Template
+==== Fork & Setup the Template
 
 . Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
 . Sign into your GitHub account.
@@ -583,7 +581,7 @@ The Node.js server should have printed a `server listening on port 8080` message
 [type=verificationFail]
 Verify that the dependencies were installed successfully and that your `openapi-spec.json` is in the root of the project folder. Contact your administrator if it continues to fail.
 
-=== Implement an API Endpoint and Deploy on OpenShift
+==== Implement an API Endpoint and Deploy on OpenShift
 
 . Open the _src/routes/junctions.ts_ file.
 . Add the following import statement: `import { query } from '../db';`
@@ -639,18 +637,19 @@ To deploy your code on the RHMI Cluster, follow the steps below:
 . Wait until the Nodeshift process completes.
 
 [type=verification]
-Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. A single Pod should be running and a route should also be available. Accessing the route should direct your the OpenAPI Spec docs for your API. Is the route available, and are OpenAPI Docs rendered?
+Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. 
+A single Pod should be running and a route should also be available. 
+Accessing the route should direct your the OpenAPI Spec docs for your API. Is the route available, and are OpenAPI Docs rendered?
 
 [type=verificationFail]
 Verify no errors were encountered during the Nodeshift deployment process. Check the Node.js Pod logs for errors. Contact your administrator if errors persist.
 
-=== Complete the API Implementation
+==== Complete the API Implementation
 
 You now have a workflow for deploying your Node.js-based API server to the RHMI Cluster. Use this to develop the API endpoints defined in your OpenAPI Spec.
 
 [time=30]
 == API Protection using 3scale API Management
-
 
 In 3scale, we will be dealing with the following constructs:
 . An *API* defines the back end service you wish to protect
@@ -746,10 +745,8 @@ Verify that you followed each step in the procedure above.  If you are still hav
 [time=90]
 == Front end visualisation using React and Patternfly 4
 
-In this section you will use Patternfly's React components to create a web
-application to display the latest parking meter and junction traffic
-information. PatternFly is an open source design system created to enable
-consistency and usability across a wide range of applications and use cases.
+In this section you will use Patternfly's React components to create a web application to display the latest parking meter and junction traffic information. 
+PatternFly is an open source design system created to enable consistency and usability across a wide range of applications and use cases.
 
 For the Parking Meters page you will:
 
