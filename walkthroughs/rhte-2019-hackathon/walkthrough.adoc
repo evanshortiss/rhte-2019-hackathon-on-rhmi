@@ -558,7 +558,7 @@ Details of table names and schemas were provided in the previous section - *API 
 
 === Camel + Spring Boot
 
-You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot=. 
+You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot. 
 
 . Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
 . Sign into your GitHub account.
