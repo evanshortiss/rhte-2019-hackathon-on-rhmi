@@ -791,7 +791,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 . Click *Create Application*.
 
 . Set a custom *User Key* for the application:
-.. On the *{3scle-app-name}* application screen you were redirected to, scroll to the *API Credentials* section.
+.. On the *{3scale-app-name}* application screen you were redirected to, scroll to the *API Credentials* section.
 .. Click the green pencil icon beside the *API User Key*
 .. In the *Set Custom User Key* modal dialog, enter:
 +
