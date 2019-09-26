@@ -592,10 +592,23 @@ You can follow this section to start building the Traffic and Parking Meters API
 . Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
 . Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-fuse-camel-project`.
 . Build, run and test using your standard Java development flow.
+==== Running Locally
 
-The remainder of the implemetation in Spring Boot is left as a task for you.
+    mvn spring-boot:run
 
-If you would like a more guided development experience, consider using the Node.js flow below.
+Getting the API docs:
+
+    curl http://localhost:8080/openapi.json
+
+==== Running on OpenShift
+
+. Login into openshift using `oc login`, you can copy the token command from the link:{openshift-host}/console[OpenShift Console, window="_blank"]
+. Switch to your project or create a new one.
+. Deploy the project to OpenShift
+
+    mvn fabric8:deploy
+
+If you are using the template project the `/meters` API path is getting the information from the database. The rest of the services are using the default HTTP 501 _Not Implemented_ result. You will need to change them and fullfill the rest of the implementation.  This implemen tation in Red Hat Fuse is left as a task for you.
 
 === Node.js
 
