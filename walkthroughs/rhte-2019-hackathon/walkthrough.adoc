@@ -22,6 +22,7 @@
 :oas3-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md
 :oas3-data-types-url: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.0.md#dataTypes
 
+:3Scale-ProductName: 3scale API Management
 :3scale-base-name: {user-sanitized-username}-traffic-service
 :3scale-api-name: {3scale-base-name}-api
 :3scale-plan-name: {3scale-base-name}-plan
@@ -556,32 +557,7 @@ Details of table names and schemas were provided in the previous section - *API 
 [time=90]
 == API Implementation using Camel + Spring Boot or Node.js
 
-=== Camel + Spring Boot
-
-=== Node.js
-
-You can follow this section to start building the Traffic and Parking Meters
-API using Node.js. You will need Node.js 10 or later installed locally, or
-alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"]
-for development since it includes a Node.js 10 stack.
-
-==== Fork & Setup the Template
-
-. Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
-. Sign into your GitHub account.
-. Open the link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template[Node.js Template, window="_blank"] and click the *Fork* button.
-. Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template`.
-. Install the dependencies by running `npm install` in the cloned directory.
-. Copy a JSON format version of your OpenAPI Spec into the cloned folder, and rename it `openapi-spec.json`.
-. Run the development server by issuing the `npm run start-dev` command.
-
-{empty}
-
-The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file.
-
-{empty}
-
-==== Accessing the database from your local environment
+=== Accessing the database from your local environment
 
 To facilitate rapid development localy, you will need to be able to connect to the Postgres instance running on OpenShift.
 In order to do this, you need to create a port forward from your local workstation to the Postgres pod running in OpenShift.
@@ -606,6 +582,54 @@ Forwarding from [::1]:5432 -> 5432
 . If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the oc port forward command
 
 {blank}
+
+=== Camel + Spring Boot
+
+You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot.
+
+. Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
+. Sign into your GitHub account.
+. Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
+. Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-fuse-camel-project`.
+. Build, run and test using your standard Java development flow.
+==== Running Locally
+
+    mvn spring-boot:run
+
+Getting the API docs:
+
+    curl http://localhost:8080/openapi.json
+
+==== Running on OpenShift
+
+. Login into openshift using `oc login`, you can copy the token command from the link:{openshift-host}/console[OpenShift Console, window="_blank"]
+. Switch to your project or create a new one.
+. Deploy the project to OpenShift
+
+    mvn fabric8:deploy
+
+If you are using the template project the `/meters` API path is getting the information from the database. The rest of the services are using the default HTTP 501 _Not Implemented_ result. You will need to change them and fullfill the rest of the implementation.  This implemen tation in Red Hat Fuse is left as a task for you.
+
+=== Node.js
+
+You can follow this section to start building the Traffic and Parking Meters API using Node.js.
+You will need Node.js 10 or later installed locally, or alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"] for development since it includes a Node.js 10 stack.
+
+==== Fork & Setup the Template
+
+. Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
+. Sign into your GitHub account.
+. Open the link:https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template[Node.js Template, window="_blank"] and click the *Fork* button.
+. Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-nodejs-api-server-template`.
+. Install the dependencies by running `npm install` in the cloned directory.
+. Copy a JSON format version of your OpenAPI Spec into the cloned folder, and rename it `openapi-spec.json`.
+. Run the development server by issuing the `npm run start-dev` command.
+
+{empty}
+
+The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file.
+
+{empty}
 
 ==== Implement an API Endpoint
 
