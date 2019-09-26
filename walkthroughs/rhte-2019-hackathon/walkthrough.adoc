@@ -35,7 +35,7 @@ Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon!
 Red Hat Managed Integration (RHMI) delivers cloud-based agile integration services hosted on OpenShift Dedicated (OSD). Using RHMI we can create consistent, immediately available, managed environments so that development teams can more easily build enterprise applications on OpenShift.
 These environments accelerate engagement timelines, reduce operational risk and cost, and address the needs of the evolving enterprise integration market.
 
-In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles. 
+In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles.
 Attendees may tackle this hackathon alone or pair up with a colleague in teams of 2 to complete the following tasks:
 
 * Data ingestion of real time traffic and parking meter data from AMQ Streams into a Postgres Database using Red Hat Fuse Online
@@ -476,7 +476,7 @@ Should support an optional `status` query parameter to filer the list of meters 
   },
   // etc.
 }
-```js
+```
 
 === GET /realtime/parking/meters/{meter-id}
 Should return the latest live information for the given parking `meter-id`.
@@ -577,7 +577,7 @@ for development since it includes a Node.js 10 stack.
 
 {empty}
 
-The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file. 
+The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file.
 
 {empty}
 
@@ -651,7 +651,7 @@ junctionsRoute.get('/', async (req, res) => {
 
 You can test that this query is working as follows:
 
-. Start your server locally with `npm run start-dev` 
+. Start your server locally with `npm run start-dev`
 . Navigating to your link:http://localhost:8080[API Server, window="_blank"]
 . Expand the `/junctions` API route
 . Click `Try it out`
@@ -662,7 +662,7 @@ You can test that this query is working as follows:
 
 ==== Deploy on OpenShift
 
-You're now ready to deploy this application on OpenShift. 
+You're now ready to deploy this application on OpenShift.
 To deploy your code on the RHMI Cluster, follow the steps below:
 
 . Run `oc login {openshift-host}`, and enter your username and password when prompted.
@@ -672,7 +672,7 @@ To deploy your code on the RHMI Cluster, follow the steps below:
 
 {blank}
 
-You will need to create an environment variable for the `PG_CONNECTION_STRING` parameter used in the code block above. 
+You will need to create an environment variable for the `PG_CONNECTION_STRING` parameter used in the code block above.
 Without an environment variable, the API server will try to use the `localhost` default that was defined above, which will not work when running on OpenShift.
 This will manifest as an error in the pod logs similar to the following `(node:26) UnhandledPromiseRejectionWarning: Error: connect ECONNREFUSED 127.0.0.1:5432`
 
@@ -682,14 +682,14 @@ This will manifest as an error in the pod logs similar to the following `(node:2
 ----
 oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=postgresql://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
 ----
-. This will trigger a redeploy of your API Server pod. 
-. Once this is complete, retry the junction query in the Swagger API. 
+. This will trigger a redeploy of your API Server pod.
+. Once this is complete, retry the junction query in the Swagger API.
 . You should now see data returned.
 
 {empty}
 
-Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. 
-A single Pod should be running and a route should also be available. 
+Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful.
+A single Pod should be running and a route should also be available.
 Accessing the route should direct your the OpenAPI Spec docs for your API. Is the route available, and are OpenAPI Docs rendered?
 
 {blank}
@@ -795,7 +795,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 [time=90]
 == Front end visualisation using React and Patternfly 4
 
-In this section you will use Patternfly's React components to create a web application to display the latest parking meter and junction traffic information. 
+In this section you will use Patternfly's React components to create a web application to display the latest parking meter and junction traffic information.
 PatternFly is an open source design system created to enable consistency and usability across a wide range of applications and use cases.
 
 For the Parking Meters page you will:
