@@ -556,6 +556,32 @@ Details of table names and schemas were provided in the previous section - *API 
 [time=90]
 == API Implementation using Camel + Spring Boot or Node.js
 
+=== Accessing the database from your local environment
+
+To facilitate rapid development localy, you will need to be able to connect to the Postgres instance running on OpenShift.
+In order to do this, you need to create a port forward from your local workstation to the Postgres pod running in OpenShift.
+
+. Get the name of the postgres pod by running the following command:
++
+----
+oc get pods -n city-of-losangeles
+----
+. Create a port forward to the Postgres pod:
++
+----
+oc port-forward POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
+----
+. This should result in output similar to this:
++
+----
+Forwarding from 127.0.0.1:5432 -> 5432
+Forwarding from [::1]:5432 -> 5432
+----
+. You will need to leave this terminal window running to keep the port forwarding active.
+. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the oc port forward command
+
+{blank}
+
 === Camel + Spring Boot
 
 You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot. 
@@ -590,32 +616,6 @@ You will need Node.js 10 or later installed locally, or alternatively you can us
 The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file. 
 
 {empty}
-
-==== Accessing the database from your local environment
-
-To facilitate rapid development localy, you will need to be able to connect to the Postgres instance running on OpenShift.
-In order to do this, you need to create a port forward from your local workstation to the Postgres pod running in OpenShift.
-
-. Get the name of the postgres pod by running the following command:
-+
-----
-oc get pods -n city-of-losangeles
-----
-. Create a port forward to the Postgres pod:
-+
-----
-oc port-forward POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
-----
-. This should result in output similar to this:
-+
-----
-Forwarding from 127.0.0.1:5432 -> 5432
-Forwarding from [::1]:5432 -> 5432
-----
-. You will need to leave this terminal window running to keep the port forwarding active.
-. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the oc port forward command
-
-{blank}
 
 ==== Implement an API Endpoint
 
