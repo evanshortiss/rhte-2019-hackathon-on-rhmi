@@ -36,7 +36,7 @@ Welcome to the RHTE 2019 Red Hat Managed Integration Hackathon!
 Red Hat Managed Integration (RHMI) delivers cloud-based agile integration services hosted on OpenShift Dedicated (OSD). Using RHMI we can create consistent, immediately available, managed environments so that development teams can more easily build enterprise applications on OpenShift.
 These environments accelerate engagement timelines, reduce operational risk and cost, and address the needs of the evolving enterprise integration market.
 
-In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles. 
+In this hackathon you’re tasked with building out a real-time IoT traffic and parking meter management solution for the city of Los Angeles.
 Attendees may tackle this hackathon alone or pair up with a colleague in teams of 2 to complete the following tasks:
 
 * Data ingestion of real time traffic and parking meter data from AMQ Streams into a Postgres Database using Red Hat Fuse Online
@@ -58,9 +58,9 @@ To get you started, you will be provided with the following infrastructure:
 * Access to 3scale API Management service for protecting your API
 * Outline reference implementations of the front end web app with a single API call implemented
 
-On your local machine, you need:
+.Prerequisites
 
-* `oc`
+* `oc` on your local machine
 * a GitHub account (link:https://github.com/join[github.com/join, window="_blank"])
 
 {blank}
@@ -572,7 +572,7 @@ To do this, you create a port forward from your local workstation to the Postgre
 . Log into OpenShift from the command line:
 .. Open the link:{openshift-host}/console[OpenShift Console]
 .. Click on your username and choose *Copy Login Command*.
-.. Paste the clipboard into your terminal. 
+.. Paste the clipboard into your terminal.
 
 . Get the name of the postgres pod by running the following command:
 +
@@ -597,7 +597,7 @@ Forwarding from [::1]:5432 -> 5432
 
 === Camel + Spring Boot
 
-You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot. 
+You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot.
 
 . Sign into your GitHub account.
 . Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
@@ -623,7 +623,7 @@ If you are using the template project the `/meters` API path is getting the info
 
 === Node.js
 
-You can follow this section to start building the Traffic and Parking Meters API using Node.js. 
+You can follow this section to start building the Traffic and Parking Meters API using Node.js.
 You will need Node.js 10 or later installed locally, or alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"] for development since it includes a Node.js 10 stack.
 
 ==== Fork & Setup the Template
@@ -638,7 +638,7 @@ You will need Node.js 10 or later installed locally, or alternatively you can us
 
 {empty}
 
-The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file. 
+The Node.js server should have printed a `server listening on port 8080` message and accessing link:http://localhost:8080[http://localhost:8080, window="_blank"] should render API Docs from your OpenAPI Spec JSON file.
 
 {empty}
 
@@ -686,7 +686,7 @@ junctionsRoute.get('/', async (req, res) => {
 
 You can test that this query is working as follows:
 
-. Start your server locally with `npm run start-dev` 
+. Start your server locally with `npm run start-dev`
 . Navigating to your link:http://localhost:8080[API Server, window="_blank"]
 . Expand the `/junctions` API route
 . Click `Try it out`
@@ -697,7 +697,7 @@ You can test that this query is working as follows:
 
 ==== Deploy on OpenShift
 
-You're now ready to deploy this application on OpenShift. 
+You're now ready to deploy this application on OpenShift.
 To deploy your code on the RHMI Cluster, follow the steps below:
 
 . Run `oc login {openshift-host}`, and enter your username and password when prompted.
@@ -707,7 +707,7 @@ To deploy your code on the RHMI Cluster, follow the steps below:
 
 {blank}
 
-You will need to create an environment variable for the `PG_CONNECTION_STRING` parameter used in the code block above. 
+You will need to create an environment variable for the `PG_CONNECTION_STRING` parameter used in the code block above.
 Without an environment variable, the API server will try to use the `localhost` default that was defined above, which will not work when running on OpenShift.
 This will manifest as an error in the pod logs similar to the following `(node:26) UnhandledPromiseRejectionWarning: Error: connect ECONNREFUSED 127.0.0.1:5432`
 
@@ -717,14 +717,14 @@ This will manifest as an error in the pod logs similar to the following `(node:2
 ----
 oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=postgresql://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
 ----
-. This will trigger a redeploy of your API Server pod. 
-. Once this is complete, retry the junction query in the Swagger API. 
+. This will trigger a redeploy of your API Server pod.
+. Once this is complete, retry the junction query in the Swagger API.
 . You should now see data returned.
 
 {empty}
 
-Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful. 
-A single Pod should be running and a route should also be available. 
+Open your project namespace in the link:{openshift-host}/console/project/{walkthrough-namespace}[OpenShift Console] and verify that the Node.js deployment was successful.
+A single Pod should be running and a route should also be available.
 Accessing the route should direct your the OpenAPI Spec docs for your API. Is the route available, and are OpenAPI Docs rendered?
 
 {blank}
@@ -830,7 +830,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 [time=90]
 == Front end visualisation using React and Patternfly 4
 
-In this section you will use Patternfly's React components to create a web application to display the latest parking meter and junction traffic information. 
+In this section you will use Patternfly's React components to create a web application to display the latest parking meter and junction traffic information.
 PatternFly is an open source design system created to enable consistency and usability across a wide range of applications and use cases.
 
 For the Parking Meters page you will:
