@@ -6,17 +6,17 @@ This repository contains a Solution Pattern that's compatible with the
 ## Lab Setup
 Refer to [content/README](content/README.md)
 
-## Requirements
+## Requirements for development
 
 * Node.js 10+
 * npm 6+
+* yarn (see https://yarnpkg.com/en/docs/install)
 
 The easiest way to install these requirements is to use [nvm](https://github.com/nvm-sh/nvm#installation-and-update) and then
 
 ```bash
 nvm use 10
 ```
-
 
 ## Development Setup for Walkthrough Content
 
