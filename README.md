@@ -10,12 +10,13 @@ Refer to [content/README](content/README.md)
 
 * Node.js 10+
 * npm 6+
-* yarn (see https://yarnpkg.com/en/docs/install)
+* yarn
 
 The easiest way to install these requirements is to use [nvm](https://github.com/nvm-sh/nvm#installation-and-update) and then
 
 ```bash
 nvm use 10
+npm install -g yarn
 ```
 
 ## Development Setup for Walkthrough Content
