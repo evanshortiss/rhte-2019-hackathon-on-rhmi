@@ -6,6 +6,19 @@ This repository contains a Solution Pattern that's compatible with the
 ## Lab Setup
 Refer to [content/README](content/README.md)
 
+## Requirements for development
+
+* Node.js 10+
+* npm 6+
+* yarn
+
+The easiest way to install these requirements is to use [nvm](https://github.com/nvm-sh/nvm#installation-and-update) and then
+
+```bash
+nvm use 10
+npm install -g yarn
+```
+
 ## Development Setup for Walkthrough Content
 
 Setup requires installation of Node.js 10.15 or later. This enables a Git hook
