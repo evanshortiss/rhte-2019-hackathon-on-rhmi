@@ -58,6 +58,11 @@ To get you started, you will be provided with the following infrastructure:
 * Access to 3scale API Management service for protecting your API
 * Outline reference implementations of the front end web app with a single API call implemented
 
+.Prerequisites
+
+* `oc` on your local machine
+* a GitHub account (link:https://github.com/join[github.com/join, window="_blank"])
+
 {blank}
 
 The architecture diagram below provides an overview of the complete solution.
@@ -103,6 +108,8 @@ image::images/arch.png[integration, role="integr8ly-img-responsive"]
 * link:https://access.redhat.com/documentation/en-us/red_hat_codeready_workspaces/1.2/[Documentation, window="_blank"]
 ****
 
+:sectnums:
+
 [time=30]
 == Data Ingestion from AMQ Streams to Postgres using Fuse Online
 
@@ -142,7 +149,7 @@ We will then create an integration that uses these two connections and translate
 
 
 [type=verification]
-Is the new AMQ Streams connection displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-4"] console?
+Is a connection named *{fuse-streams-connection-name}* displayed on the *Connections* screen of the link:{fuse-url}[Red Hat Fuse Online, window="_blank", id="{context}-4"] console?
 
 [type=verificationFail]
 Verify that you followed each step in the procedure above.  If you are still having issues, contact your administrator.
@@ -559,8 +566,13 @@ Details of table names and schemas were provided in the previous section - *API 
 
 === Accessing the database from your local environment
 
-To facilitate rapid development localy, you will need to be able to connect to the Postgres instance running on OpenShift.
-In order to do this, you need to create a port forward from your local workstation to the Postgres pod running in OpenShift.
+To facilitate rapid development localy, you need to connect to the Postgres instance running on OpenShift.
+To do this, you create a port forward from your local workstation to the Postgres pod running in OpenShift.
+
+. Log into OpenShift from the command line:
+.. Open the link:{openshift-host}/console[OpenShift Console]
+.. Click on your username and choose *Copy Login Command*.
+.. Paste the clipboard into your terminal.
 
 . Get the name of the postgres pod by running the following command:
 +
@@ -587,7 +599,6 @@ Forwarding from [::1]:5432 -> 5432
 
 You can follow this section to start building the Traffic and Parking Meters API using Camel & Spring Boot.
 
-. Create a GitHub account at link:https://github.com/join[github.com/join, window="_blank"], if you don't already have one.
 . Sign into your GitHub account.
 . Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
 . Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-fuse-camel-project`.
@@ -791,7 +802,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 . Click *Create Application*.
 
 . Set a custom *User Key* for the application:
-.. On the *{3scle-app-name}* application screen you were redirected to, scroll to the *API Credentials* section.
+.. On the *{3scale-app-name}* application screen you were redirected to, scroll to the *API Credentials* section.
 .. Click the green pencil icon beside the *API User Key*
 .. In the *Set Custom User Key* modal dialog, enter:
 +
