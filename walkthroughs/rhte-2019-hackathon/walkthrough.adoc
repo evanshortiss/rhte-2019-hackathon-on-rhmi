@@ -2,7 +2,7 @@
 
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
-:fuse-database-connection-name: PostgresDB
+:fuse-database-connection-name: City Postgres
 :streams-junction-topic-name: junctions
 :streams-meter-topic-name: meter
 :streams-junction-data-integration: IoT Junction Data Ingestion
@@ -860,7 +860,7 @@ image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 .. Select an *Owner* organisation and enter a *Repository name*.
 .. Click *Create repository from template* button.
 . Open link:{che-url}[CodeReady Workspaces, window="_blank"]. The *New Workspace* wizard will be displayed.
-.. Enter a name such as *RHTE Hackaton Frontend*.
+.. Enter a name such as *rhte-hackathon-frontend*.
 .. Select *Node10* in the *Select stack* section.
 .. In the *Projects* section click *Add or Import Project*
 .. Choose *GitHub*, and authenticate if necessary by clicking the *Connect your github account* button.

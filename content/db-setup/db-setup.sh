@@ -75,6 +75,10 @@ oc exec $POSTGRES_POD -- bash -c 'psql -U postgres -f /var/lib/pgsql/data/setup-
 echo "Run create-users.sh"
 oc exec $POSTGRES_POD -- bash -c 'sh /var/lib/pgsql/data/setup-files/create-users-and-dbs.sh'
 
+# Allow more than the default 100 connections to postgresql
+oc set env dc/orders-db -n city-of-losangeles POSTGRESQL_MAX_CONNECTIONS=500
+
+# Enables evals users to setup a port forward for local dev with postgresql
 oc create -f ./port-forward-role.yaml
 
 for NUM in {1..50}
