@@ -434,7 +434,9 @@ You should also download the specification in either JSON or YAML format for use
 
 === Accessing the database from your local environment
 
-To facilitate rapid development localy, you need to connect to the Postgres instance running on OpenShift.
+You have been given access to a Postgres database that contains lookup and live data for the traffic junctions and parking meters.
+This is the same database that you used during the Fuse Online Integration tasks when ingesting data from AMQ Streams.
+To facilitate rapid development localy, you need to connect to this Postgres instance which is running on OpenShift.
 To do this, you create a port forward from your local workstation to the Postgres pod running in OpenShift.
 
 . Log into OpenShift from the command line:
@@ -465,10 +467,7 @@ Forwarding from [::1]:5432 -> 5432
 
 === Connecting to Postgres
 
-You have been given access to a Postgres database that contains lookup and live data for the traffic
-junctions and parking meters.
-
-Use the following details to connect:
+When implementing your API, you will need to use the following details to connect your API Server to your Postgres DB:
 
 . Username: `{postgres-username}`
 . Password: `{postgres-password}`
@@ -476,7 +475,9 @@ Use the following details to connect:
 . Database: `{postgres-database}`
 . Port: `{postgres-port}`
 
-Details of table names and schemas are provided below.
+This information should ideally be provided to your API server via a config map, backed by a secret in OpenShift.
+
+*Note*: for local development, with port forwarding active, your database hostname will be `localhost`.
 
 === Database Table Schemas
 
@@ -543,7 +544,10 @@ You can follow this section to start building the Traffic and Parking Meters API
 . Sign into your GitHub account.
 . Open the link:https://github.com/hguerrero/rhte-2019-hackathon-on-rhmi-fuse-camel-project[Camel / Spring Boot Template, window="_blank"] and click the *Fork* button.
 . Clone the template locally via `git clone https://github.com/YOUR_USERNAME/rhte-2019-hackathon-on-rhmi-fuse-camel-project`.
+. Set your database connection parameters in `src/main/resources/application.yml`
 . Build, run and test using your standard Java development flow.
+
+
 ==== Running Locally
 
     mvn spring-boot:run
