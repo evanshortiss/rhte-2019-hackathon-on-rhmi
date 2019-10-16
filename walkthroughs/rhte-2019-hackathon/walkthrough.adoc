@@ -2,16 +2,16 @@
 
 :kafka-broker-uri: integreatly-cluster-kafka-brokers.amq-streams.svc:9092
 :fuse-streams-connection-name: AMQ Streams Message Broker
-:fuse-database-connection-name: PostgresDB
+:fuse-database-connection-name: City Postgres
 :streams-junction-topic-name: junctions
 :streams-meter-topic-name: meter
 :streams-junction-data-integration: IoT Junction Data Ingestion
 :streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
-:postgres-hostname: postgresql.city-of-losangeles.svc
+:postgres-hostname: Postgres.city-of-losangeles.svc
 :postgres-port: 5432
 :postgres-database: city-info
-:postgres-connection-url: jdbc:postgresql://{postgres-hostname}:{postgres-port}/{postgres-database}
+:postgres-connection-url: jdbc:Postgres://{postgres-hostname}:{postgres-port}/{postgres-database}
 :postgres-username: {username}
 :postgres-password: Password1
 :postgres-junction-lookup-table: junction_info
@@ -50,7 +50,7 @@ Attendees may tackle this hackathon alone or pair up with a colleague in teams o
 To get you started, you will be provided with the following infrastructure:
 
 * An AMQ Streams instance with 2 topics - {streams-junction-topic-name} and {streams-meter-topic-name}. These topics will be connected to a live stream of IoT data which needs to be ingested
-* A PostgreSQL server with two databases:
+* A Postgres server with two databases:
 - A pre populated Lookup database containing reference data which maps incoming Ids for traffic junctions and parking meters to their corresponding names and geo locations
 - An empty database, with pre defined schemas for storing the live IoT traffic and sensor data
 * Access to the Apicurio API designer tool for creating the OpenAPI Spec compatible API definition
@@ -114,8 +114,8 @@ image::images/arch.png[integration, role="integr8ly-img-responsive"]
 == Data Ingestion from AMQ Streams to Postgres using Fuse Online
 
 Fuse Online is an enterprise integration platform that provides connectors for many services, such as AMQ Streams and Postgres.
-In this section we will create two connection - one to AMQ Streams and one to Postgres.
-We will then create an integration that uses these two connections and translates incoming data from AMQ streams into database insert statements on Postgres.
+In this section we will create two connections - one to AMQ Streams and one to Postgres.
+We will then create an integration that uses these two connections and translates the incoming data from AMQ streams into database *INSERT* statements on Postgres.
 
 === Creating the AMQ Streams Connector
 
@@ -134,7 +134,7 @@ We will then create an integration that uses these two connections and translate
 ----
 {kafka-broker-uri}
 ----
-.. Click the Validate button to ensure the connection to AMQ Streams is configured correctly.
+.. Click the *Validate* button to ensure the connection to AMQ Streams is configured correctly.
 .. You should see the message `Kafka Message Broker has been successfully validated`.
 .. Click Next to move onto the *Name connection* step
 
@@ -157,7 +157,7 @@ Verify that you followed each step in the procedure above.  If you are still hav
 
 === Creating the Postgres Connector
 
-To allow Fuse Online to store data consumed from AMQ Streams, we need to create a new Database connection in Red Hat Fuse Online.
+To allow Fuse Online to write data consumed from AMQ Streams to Postgres, we need to create a new Database connection in Red Hat Fuse Online.
 
 . Log in to the link:{fuse-url}[Red Hat Fuse Online, window="_blank"] console.
 
@@ -358,7 +358,7 @@ Is the integration displayed as *Running* on the *Integration* screen of the lin
 [time=30]
 == API Definition using Apicurio
 
-Apicurito is the Red Hat API Designer tool that provides the abaility to create an *OpenAPI Specification* compatible API definitions.
+Apicurito is the Red Hat API Designer tool that provides the ability to create *OpenAPI Specification* compatible API definitions.
 The OpenAPI Specification (OAS) defines a standard, language-agnostic interface to RESTful APIs which allows both humans and computers to discover and understand the capabilities of the service without access to source code, documentation, or through network traffic inspection.
 
 When properly defined, a consumer can understand and interact with the remote service with a minimal amount of implementation logic.
@@ -366,7 +366,7 @@ An OpenAPI definition can then be used by documentation generation tools to disp
 For more information on the *OpenAPI Specification* see the link:{oas3-url}[Open API Specification, window="_blank"] on GitHub
 
 In this section we will use the Red Hat API designer to create an OpenAPI Specification which will then be used to bootstrap the development of our API Server.
-The APIs created should combine data from the provided Lookup Tables - *{postgres-junction-lookup-table}* and *{postgres-meter-lookup-table}* - with the data from the live junction and meter tables which is being injested from AMQ Streams.
+The APIs created should combine data from the provided Lookup Tables in Postgres - *{postgres-junction-lookup-table}* and *{postgres-meter-lookup-table}* - with the data from the live junction and meter tables which is being injested from AMQ Streams.
 
 === API Data Types
 You will need to create at least two main API Data Types - *Junction* and *Meter*.
@@ -428,7 +428,6 @@ The supported values for status that will need to be catered for during API impl
 Once you have fully defined the API specification, click *Generate* => *Fuse Camel Project*
 You should also download the specification in either JSON or YAML format for use in the next section, if you wish to implement the API in a technology other than *Fuse Camel*.
 
-
 [time=90]
 == API Implementation using Camel + Spring Boot or Node.js
 
@@ -444,15 +443,15 @@ To do this, you create a port forward from your local workstation to the Postgre
 .. Click on your username and choose *Copy Login Command*.
 .. Paste the clipboard into your terminal.
 
-. Get the name of the postgres pod by running the following command:
+. Get the name of the Postgres pod by running the following command:
 +
 ----
-oc get pods -n city-of-losangeles
+export POSTGRES_POD_NAME=$(oc get pods -n city-of-losangeles | grep postgresql | awk '{print $1}')
 ----
 . Create a port forward to the Postgres pod:
 +
 ----
-oc port-forward POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
+oc port-forward $POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
 ----
 . This should result in output similar to this:
 +
@@ -461,7 +460,7 @@ Forwarding from 127.0.0.1:5432 -> 5432
 Forwarding from [::1]:5432 -> 5432
 ----
 . You will need to leave this terminal window running to keep the port forwarding active.
-. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the oc port forward command
+. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the `oc get pods` and `oc port forward` commands.
 
 {blank}
 
@@ -552,9 +551,13 @@ You can follow this section to start building the Traffic and Parking Meters API
 
     mvn spring-boot:run
 
+{blank}
+
 Getting the API docs:
 
     curl http://localhost:8080/openapi.json
+
+{blank}
 
 ==== Running on OpenShift
 
@@ -564,12 +567,21 @@ Getting the API docs:
 
     mvn fabric8:deploy
 
-If you are using the template project the `/meters` API path is getting the information from the database. The rest of the services are using the default HTTP 501 _Not Implemented_ result. You will need to change them and fullfill the rest of the implementation.  This implemen tation in Red Hat Fuse is left as a task for you.
+{blank}
+
+If you are using the template project the `/meters` API path is getting the information from the database. The rest of the services are using the default HTTP 501 _Not Implemented_ result. You will need to change them and fulfill the rest of the implementation.  This implementation in Red Hat Fuse is left as a task for you.
 
 === Node.js
 
 You can follow this section to start building the Traffic and Parking Meters API using Node.js.
 You will need Node.js 10 or later installed locally, or alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"] for development since it includes a Node.js 10 stack.
+
+[NOTE]
+====
+* When developing locally, it's recommended to use link:https://github.com/nvm-sh/nvm[github.com/nvm, ,window="_blank"] to install Node.js/
+* After running the nvm install command, copy the output into your `.bashrc` or similar.
+* Open a new terminal and type `nvm install 10 && nvm use 10` to install and enable Node.js 10.x.
+====
 
 ==== Fork & Setup the Template
 
@@ -596,7 +608,7 @@ The Node.js server should have printed a `server listening on port 8080` message
 const connectionString = env
   .get(
     'PG_CONNECTION_STRING',
-    'postgresql://{username}:Password1@localhost:{postgres-port}/{postgres-database}'
+    'Postgres://{username}:Password1@localhost:{postgres-port}/{postgres-database}'
   )
   .asUrlString();
 ----
@@ -660,7 +672,7 @@ This will manifest as an error in the pod logs similar to the following `(node:2
 +
 [subs="attributes+"]
 ----
-oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=postgresql://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
+oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=Postgres://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
 ----
 . This will trigger a redeploy of your API Server pod.
 . Once this is complete, retry the junction query in the Swagger API.
@@ -816,7 +828,7 @@ image::images/ui-traffic-heatmap.png[role="integr8ly-img-responsive"]
 .. Select an *Owner* organisation and enter a *Repository name*.
 .. Click *Create repository from template* button.
 . Open link:{che-url}[CodeReady Workspaces, window="_blank"]. The *New Workspace* wizard will be displayed.
-.. Enter a name such as *RHTE Hackaton Frontend*.
+.. Enter a name such as *rhte-hackathon-frontend*.
 .. Select *Node10* in the *Select stack* section.
 .. In the *Projects* section click *Add or Import Project*
 .. Choose *GitHub*, and authenticate if necessary by clicking the *Connect your github account* button.
