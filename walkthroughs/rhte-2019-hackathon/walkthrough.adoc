@@ -8,10 +8,10 @@
 :streams-junction-data-integration: IoT Junction Data Ingestion
 :streams-meter-data-integration: IoT Parking Meter Data Ingestion
 
-:postgres-hostname: Postgres.city-of-losangeles.svc
+:postgres-hostname: postgresql.city-of-losangeles.svc
 :postgres-port: 5432
 :postgres-database: city-info
-:postgres-connection-url: jdbc:Postgres://{postgres-hostname}:{postgres-port}/{postgres-database}
+:postgres-connection-url: jdbc:postgresql://{postgres-hostname}:{postgres-port}/{postgres-database}
 :postgres-username: {username}
 :postgres-password: Password1
 :postgres-junction-lookup-table: junction_info
@@ -474,6 +474,8 @@ When implementing your API, you will need to use the following details to connec
 . Database: `{postgres-database}`
 . Port: `{postgres-port}`
 
+{blank}
+
 This information should ideally be provided to your API server via a config map, backed by a secret in OpenShift.
 
 *Note*: for local development, with port forwarding active, your database hostname will be `localhost`.
@@ -608,7 +610,7 @@ The Node.js server should have printed a `server listening on port 8080` message
 const connectionString = env
   .get(
     'PG_CONNECTION_STRING',
-    'Postgres://{username}:Password1@localhost:{postgres-port}/{postgres-database}'
+    'postgresql://{username}:Password1@localhost:{postgres-port}/{postgres-database}'
   )
   .asUrlString();
 ----
@@ -672,7 +674,7 @@ This will manifest as an error in the pod logs similar to the following `(node:2
 +
 [subs="attributes+"]
 ----
-oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=Postgres://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
+oc set env dc/nodejs-city-api-server PG_CONNECTION_STRING=postgresql://{username}:Password1@{postgres-hostname}:{postgres-port}/{postgres-database}
 ----
 . This will trigger a redeploy of your API Server pod.
 . Once this is complete, retry the junction query in the Swagger API.
