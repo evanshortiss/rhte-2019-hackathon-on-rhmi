@@ -368,10 +368,121 @@ For more information on the *OpenAPI Specification* see the link:{oas3-url}[Open
 In this section we will use the Red Hat API designer to create an OpenAPI Specification which will then be used to bootstrap the development of our API Server.
 The APIs created should combine data from the provided Lookup Tables in PostgreSQL - *{postgres-junction-lookup-table}* and *{postgres-meter-lookup-table}* - with the data from the live junction and meter tables which is being injested from AMQ Streams.
 
+=== API Data Types
+You will need to create at least two main API Data Types - *Junction* and *Meter*.
+These Data Types form the basis for the APIs which will be created to act upon the data types.
+For more information on *Data Types* see the link:{oas3-data-types-url}[Open API Spec Data Types Documentation]
+
+. Log in to the link:{apicurio-url}[Red Hat API Designer, window="_blank"] console.
+. Click the *New API* Button
+. Click the *Add a data type* link on the left of the screen under the *Data Types* heading
+. Enter the value of `Meter` in the *Name* field
+. Enter the following vale for *JSON Example*
++
+----
+{
+  "meter_id": 1,
+  "last_updated": "2019-10-15T20:12:32Z",
+  "address": "1301 N LA BREA AVE",
+  "latitude": 34.095452,
+  "longitude": -118.344219,
+  "status": "available"
+}
+----
+. Click the *REST Resource* box to create default REST resources for the Meter data type
+. Click *Save*
+
+{blank}
+
+Repeat the above steps to add a Data Type for *Junction*, providing the following value for the *JSON Example* field.
+
+----
+{
+  "id": 1,
+  "junction_name": "CANOGA AV AT VANOWEN ST",
+  "latitude": 34.18834537329447,
+  "longitude": -118.59747110546994,
+  "east_west_count" : 10,
+  "north_south_count" : 8
+}
+----
+
+=== API Paths
+Default API Paths have automatically been created when creating the *Meter* and *Junction* data types, by clicking the *REST Resource* box during the data type creation.
+This will provide default implementations for *GET* and *POST* paths, both for listing all *Meter* and *Junction* data types as well as getting specific *Meter* and *Junction* data types by id.
+The API should only support read operations, which means that the *POST*, *PUT* and *DELETE* methods should be removed.
+
+The *GET* endpoint for the *Meter* data type should be extended to support an optional query paramter called *status* which can be used to return a filtered list of *Meter* objects that match the specific status.
+The supported values for status that will need to be catered for during API implementation are "available", "occupied", "unknown", or "out-of-service".
+
+. Select the */meters* path.
+. Click on the *GET* operation.
+. Click the *+* symbol to the right of *QUERY PARAMETERS*
+. Enter the following value for *Name*: `status`
+. Enter the following value for *Description*: `Filter list of returned meters by status. Supported values for status are are "available", "occupied", "unknown", or "out-of-service".`
+. Under Type Information, leave the parameter as *Not Required* and select `String` from the *type* dropdown
+. Click Save.
+
+=== Download the completed OpenAPI Specification
+
+Once you have fully defined the API specification, click *Generate* => *Fuse Camel Project*
+You should also download the specification in either JSON or YAML format for use in the next section, if you wish to implement the API in a technology other than *Fuse Camel*.
+
+[time=90]
+== API Implementation using Camel + Spring Boot or Node.js
+
+=== Accessing the database from your local environment
+
+To facilitate rapid development locally, you need to connect to the PostgreSQL instance running on OpenShift.
+To do this, you create a port forward from your local workstation to the PostgreSQL pod running in OpenShift.
+
+. Log into OpenShift from the command line:
+.. Open the link:{openshift-host}/console[OpenShift Console]
+.. Click on your username and choose *Copy Login Command*.
+.. Paste the clipboard into your terminal.
+
+. Get the name of the PostgreSQL pod by running the following command:
++
+----
+export POSTGRES_POD_NAME=$(oc get pods -n city-of-losangeles | grep postgresql | awk '{print $1}')
+----
+. Create a port forward to the Postgres pod:
++
+----
+oc port-forward $POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
+----
+. This should result in output similar to this:
++
+----
+Forwarding from 127.0.0.1:5432 -> 5432
+Forwarding from [::1]:5432 -> 5432
+----
+. You will need to leave this terminal window running to keep the port forwarding active.
+. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the `oc get pods` and `oc port forward` commands.
+
+{blank}
+
+=== Connecting to Postgres
+
+You have been given access to a Postgres database that contains lookup and live data for the traffic
+junctions and parking meters.
+
+Use the following details to connect:
+
+. Username: `{postgres-username}`
+. Password: `{postgres-password}`
+. Hostname: `{postgres-hostname}`
+. Database: `{postgres-database}`
+. Port: `{postgres-port}`
+
+{blank}
+
+Details of table names and schemas are provided below.
+
 === Database Table Schemas
 
-The schemas for each of the available database tables are provided below.
-These should be used as a reference to better understand the underlying data storage layout when desiging the APIs.
+The schemas for each of the available database table are provided below.
+These should be used as a reference to better understand the underlying data storage layout when implementing the APIs.
 
 *{postgres-meter-lookup-table}*
 
@@ -424,173 +535,6 @@ This table stores the live information on junction traffic flow.
  count_ew    | integer
 ----
 
-
-=== API Data Types
-You will need to create at least two main API Data Types - *Junction* and *Meter*.
-These Data Types form the basis for the APIs which will be created to act upon the data types.
-For more information on *Data Types* see the link:{oas3-data-types-url}[Open API Spec Data Types Documentation]
-
-. Log in to the link:{apicurio-url}[Red Hat API Designer, window="_blank"] console.
-. Click the *New API* Button
-. Click the *Add a data type* link on the left of the screen under the *Data Types* heading
-. Enter the value of `Meter` in the *Name* field
-. Enter the following vale for *JSON Example*
-+
-----
-{
-  "meter_id": "Integer",
-  "last_updated": "Timestamp",
-  "address": "String",
-  "latitude": "Float",
-  "longitude": "Float",
-  "status": "String"
-}
-----
-. Click the *REST Resource* box to create default REST resources for the Meter data type
-. Click *Save*
-
-Repeat the above steps to add a Data Type for *Junction*, providing an appropriate value for the *JSON Example* field.
-
-=== API Paths
-The specifics of the various API paths and their payloads has been left as a design decision for you.
-Some sample API Paths and payloads are provided below as examples.
-You should be guided by, but not feel tied to, these examples.
-
-==== GET /realtime/parking/meters
-Should return information for parking meters.
-Should support an optional `status` query parameter to filter the list of meters based on their status.
-
-```js
-[
-  {
-    "meter_id": Integer,
-    "last_updated": Timestamp,
-    "address": String,
-    "latitude": Float,
-    "longitude": Float,
-
-    // Can be "available", "occupied", "unknown", or "out-of-service"
-    "status": String
-  },
-  {
-    "meter_id": Integer,
-    "last_updated": Timestamp,
-    "address": String,
-    "latitude": Float,
-    "longitude": Float,
-
-    // Can be "available", "occupied", "unknown", or "out-of-service"
-    "status": String
-  },
-  // etc.
-}
-```
-
-=== GET /realtime/parking/meters/{meter-id}
-Should return the latest live information for the given parking `meter-id`.
-
-```js
-{
-  "meter_id": Integer,
-  "last_updated": Timestamp,
-  "address": String,
-  "latitude": Float,
-  "longitude": Float,
-
-  // Can be "available", "occupied", "unknown", or "out-of-service"
-  "status": String
-}
-```
-
-=== GET /realtime/traffic/junctions/{junction-id}
-Should return latest conditions for the given junction:
-
-```js
-{
-  "junction_id": Integer,
-  "last_updated": Timestamp,
-  "prev_east_west_count": Integer,
-  "prev_north_south_count": Integer,
-  "24_hr_total_north_south_count": Integer,
-  "24_hr_total_east_west_count": Integer
-}
-```
-
-=== GET /realtime/traffic/junctions
-Should return information for all junctions:
-
-```js
-[
-  {
-    "junction_id": Integer,
-    "last_updated": Timestamp,
-    "latitude": Float,
-    "longitude": Float,
-    "count_ns": Integer,
-    "count_ew": Integer
-  },
-  {
-    "junction_id": Integer,
-    "last_updated": Timestamp,
-    "latitude": Float,
-    "longitude": Float,
-    "count_ns": Integer,
-    "count_ew": Integer
-  },
-  // etc.
-]
-```
-
-=== Download the completed OpenAPI Specification
-
-Once you have fully defined the API specification, click *Generate* => *Fuse Camel Project*
-You should also download the specification in either JSON or YAML format for use in the next section, if you wish to implement the API in a technology other than *Fuse Camel*.
-
-[time=90]
-== API Implementation using Camel + Spring Boot or Node.js
-
-=== Accessing the database from your local environment
-
-You have been given access to a PostgreSQL database that contains lookup and live data for the traffic
-junctions and parking meters. Use the following details to connect from your application running on the cluster:
-
-. Username: `{postgres-username}`
-. Password: `{postgres-password}`
-. Hostname: `{postgres-hostname}`
-. Database: `{postgres-database}`
-. Port: `{postgres-port}`
-
-{blank}
-
-Details of table names and schemas were provided in the previous section - *API Definition using Apicurio*
-
-To facilitate rapid development locally, you need to connect to the PostgreSQL instance running on OpenShift.
-To do this, you create a port forward from your local workstation to the PostgreSQL pod running in OpenShift.
-
-. Log into OpenShift from the command line:
-.. Open the link:{openshift-host}/console[OpenShift Console]
-.. Click on your username and choose *Copy Login Command*.
-.. Paste the clipboard into your terminal.
-
-. Get the name of the PostgreSQL pod by running the following command:
-+
-----
-export POSTGRES_POD_NAME=$(oc get pods -n city-of-losangeles | grep postgresql | awk '{print $1}')
-----
-. Create a port forward to the Postgres pod:
-+
-----
-oc port-forward POSTGRES_POD_NAME 5432:5432 -n city-of-losangeles
-----
-. This should result in output similar to this:
-+
-----
-Forwarding from 127.0.0.1:5432 -> 5432
-Forwarding from [::1]:5432 -> 5432
-----
-. You will need to leave this terminal window running to keep the port forwarding active.
-. If you find that the port forwarding stops working after some time, simply `^C` to cancel the port forward session and re-run the `oc get pods` and `oc port forward` commands.
-
 {blank}
 
 === Camel + Spring Boot
@@ -630,7 +574,6 @@ If you are using the template project the `/meters` API path is getting the info
 You can follow this section to start building the Traffic and Parking Meters API using Node.js.
 You will need Node.js 10 or later installed locally, or alternatively you can use link:{che-url}[CodeReady Workspaces, window="_blank"] for development since it includes a Node.js 10 stack.
 
-+
 [NOTE]
 ====
 * When developing locally, it's recommended to use link:https://github.com/nvm-sh/nvm[github.com/nvm, ,window="_blank"] to install Node.js/
