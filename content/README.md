@@ -39,11 +39,16 @@ npm install
 npm run nodeshift
 ```
 
-By default the IoT data is not placed on the AMQ Streams topics, but is instead
-logged to `stdout`. Set a `TRANSPORT_MODE=kafka` environment variable on the
-generator Deployment Config to start sending data to the AMQ Stream topics.
+_*NOTE*: By default the IoT data is not placed on the AMQ Streams topics, but is instead logged to `stdout`. Set a `TRANSPORT_MODE=kafka` environment variable on the generator Deployment Config to start sending data to the AMQ Stream topics, e.g `oc set env dc/parking-and-junction-data-generator TRANSPORT_MODE=kafka -n city-of-losangeles`_
 
-### GitHub OAuth Configuration
+### Walkthrough Content
+To load the Solution Pattern for lab/hackathon users, do the following:
+
+1. Login as `admin` using `oc login -u admin`
+1. Run `oc patch webapp tutorial-web-app-operator -n webapp --type=merge -p '{"spec":{"template":{"parameters":{"WALKTHROUGH_LOCATIONS":"https://github.com/evanshortiss/rhte-2019-hackathon-on-rhmi"}}}}'`
+
+
+### GitHub OAuth Configuration for CodeReady
 You will need to configure GitHub OAuth to enable integration between CodeReady
 Workspaces and the GitHub Accounts of lab attendees. This is done by creating
 an **OAuth application** on GitHub and linking it to the **Launcher SSO**
